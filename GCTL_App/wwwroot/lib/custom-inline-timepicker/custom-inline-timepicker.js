@@ -274,8 +274,7 @@
             return this;
         }
 
-        _enforceTwoDigitInputs(instance) {
-            debugger
+        _enforceTwoDigitInputs(instance) {          
             var $calendar = $(instance.calendarContainer);
             var $numInputs = $calendar.find('.flatpickr-hour, .flatpickr-minute, .flatpickr-second');
 

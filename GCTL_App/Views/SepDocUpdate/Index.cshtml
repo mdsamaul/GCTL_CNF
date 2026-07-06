@@ -71,7 +71,7 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center bg-white p-2 rounded shadow-sm border mb-3 sticky-bar">
                 <div class="d-flex align-items-center py-1 ps-2">
                     <h1 class="fw-bold text-dark m-0" style="font-size: 0.95rem; letter-spacing: 0.5px;">
-                        Shipment Update
+                        Daily Job Update
                     </h1>
                 </div>
 
@@ -239,11 +239,20 @@
 
                     <!-- Customer Delivery Address -->
                     <div class="col-lg-4 col-md-6">
+                        <label class="form-label">Customer Address</label>
+                        <textarea class="form-control form-control-sm" rows="1" id="customerAddress"></textarea>
+                        <span class="text-danger"></span>
+                    </div>
+                    <!-- Customer Delivery Address -->
+                    <div class="col-lg-4 col-md-6">
                         <label class="form-label">Customer Delivery Address</label>
                         <textarea class="form-control form-control-sm" rows="1" id="customerDeliveryAddress"></textarea>
                         <span class="text-danger"></span>
                     </div>
 
+                    <!-- Port Name -->
+                    <div class="col-lg-4 col-md-6">                     
+                    </div>
                     <!-- Port Name -->
                     <div class="col-lg-4 col-md-6">
                         <label class="form-label">Port Name</label>
@@ -268,9 +277,20 @@
                     </div>
 
                     <!-- LC Value -->
-                    <div class="col-lg-4 col-md-6">
+                    @* <div class="col-lg-4 col-md-6">
                         <label class="form-label">LC Value</label>
                         <input class="form-control form-control-sm" id="lcValue" />
+                        <span class="text-danger"></span>
+                    </div> *@
+                    <div class="col-lg-4 col-md-6">
+                        <label class="form-label">L/C Value</label>
+                        <div class="d-flex gap-2 group-horizontal">
+                            <input type="number" class="form-control form-control-sm" id="lcValue" />
+                            <select class="form-select form-select-sm custom-select-single" data-placeholder="Select Unit" id="lcUnitId" asp-items="ViewBag.QuantityUnit as SelectList">
+                                <option value="">Select Unit</option>
+                            </select>
+                        </div>
+                        <span class="text-danger"></span>
                         <span class="text-danger"></span>
                     </div>
 
