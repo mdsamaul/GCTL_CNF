@@ -15,9 +15,11 @@
     padding: 0 !important;
     margin: 0 !important;
 }
+
 .flatpickr-innerContainer .flatpickr-rContainer {
     background: #ffffff !important;
 }
+
 .flatpickr-calendar.noCalendar.hasTime .flatpickr-time {
     height: auto;
     background: #f9f9f9;
@@ -30,13 +32,14 @@
 }
 
 .form-multi-select-dropdown .form-multi-select-options {
-    max-height: 300px; /* You can adjust this height */
+    max-height: 300px;
     overflow-y: auto;
 }
 
 /* Calendar Start */
 .flatpickr-calendar {
     background-color: #fff !important;
+    overflow: visible !important;
 }
 
 span.flatpickr-weekday, .flatpickr-weekdaycontainer, .flatpickr-months .flatpickr-month {
@@ -53,7 +56,6 @@ span.flatpickr-weekday, .flatpickr-weekdaycontainer, .flatpickr-months .flatpick
             font-weight: 700;
             background-color: rgba(0, 0, 0, 0);
             color: #141824;
-            /* font-size: large; */
         }
 
 /* Calendar End */
@@ -70,23 +72,25 @@ span.flatpickr-weekday, .flatpickr-weekdaycontainer, .flatpickr-months .flatpick
 .date-picker-wrapper .footer {
     display: none !important;
 }
-span.flatpickr-weekday{
-    background:#ffffff !important;
+
+span.flatpickr-weekday {
+    background: #ffffff !important;
 }
+
 .flatpickr-calendar.open {
     opacity: 1;
     transform: translateY(0) scale(1);
     pointer-events: auto;
 }
 
-    .flatpickr-calendar:before,
-    .flatpickr-calendar:after,
-    .flatpickr-calendar.arrowTop:before,
-    .flatpickr-calendar.arrowTop:after,
-    .flatpickr-calendar.arrowBottom:before,
-    .flatpickr-calendar.arrowBottom:after {
-        display: none !important;
-    }
+.flatpickr-calendar:before,
+.flatpickr-calendar:after,
+.flatpickr-calendar.arrowTop:before,
+.flatpickr-calendar.arrowTop:after,
+.flatpickr-calendar.arrowBottom:before,
+.flatpickr-calendar.arrowBottom:after {
+    display: none !important;
+}
 
 .flatpickr-innerContainer,
 .flatpickr-rContainer,
@@ -214,20 +218,22 @@ span.flatpickr-weekday{
     .flatpickr-months .flatpickr-month .flatpickr-current-month .flatpickr-monthDropdown-months {
         background-color: #fafbfc !important;
     }
+
 .numInputWrapper {
     background: #fafbfc !important;
 }
+
 .flatpickr-months .flatpickr-month {
     padding-top: 0rem !important;
 }
 
-/* Weekdays - MUST match dayContainer's box-sizing/width exactly */
+/* Weekdays */
 .flatpickr-weekdays {
     background: #f8f9fa;
     height: auto;
     margin: 0 !important;
     width: 100% !important;
-    margin-top:12px !important;
+    margin-top: 12px !important;
 }
 
 .flatpickr-weekdaycontainer {
@@ -252,7 +258,7 @@ span.flatpickr-weekday {
     padding: 0 !important;
 }
 
-/* Day cells - MUST match weekday column width/box-sizing exactly (no side margin/padding diff) */
+/* Day cells */
 .flatpickr-day {
     width: 14.2857% !important;
     max-width: 14.2857% !important;
@@ -322,11 +328,9 @@ span.flatpickr-weekday {
             color: #fff;
         }
 
+/* ============ Tooltip (fixed positioning, JS controlled) ============ */
 .custom-holiday-tooltip {
-    position: absolute;
-    bottom: calc(100% + 6px);
-    left: 50%;
-    transform: translateX(-50%) translateY(4px);
+    position: fixed;
     background: #212529;
     color: #fff;
     padding: 5px 10px;
@@ -336,30 +340,54 @@ span.flatpickr-weekday {
     white-space: nowrap;
     opacity: 0;
     visibility: hidden;
-    transition: opacity .2s ease, transform .2s ease;
-    z-index: 10000;
+    transition: opacity .15s ease;
+    z-index: 999999;
     pointer-events: none;
 }
 
     .custom-holiday-tooltip:after {
         content: '';
         position: absolute;
+        border: 5px solid transparent;
+    }
+
+    .custom-holiday-tooltip.tt-top:after {
         top: 100%;
         left: 50%;
         transform: translateX(-50%);
-        border: 5px solid transparent;
         border-top-color: #212529;
     }
 
-.flatpickr-day.custom-holiday:hover .custom-holiday-tooltip {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-}
+    .custom-holiday-tooltip.tt-bottom:after {
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-bottom-color: #212529;
+    }
+
+    .custom-holiday-tooltip.tt-visible {
+        opacity: 1;
+        visibility: visible;
+    }
 
 /* ============ Input styling ============ */
 .custom-date-wrapper {
     position: relative;
+}
+
+.custom-date-group .form-control,
+.custom-date-group .input-group-text {
+    border-radius: 0 !important;
+}
+
+.custom-date-group > :first-child {
+    border-top-left-radius: 0.25rem !important;
+    border-bottom-left-radius: 0.25rem !important;
+}
+
+.custom-date-group > :last-child {
+    border-top-right-radius: 0.25rem !important;
+    border-bottom-right-radius: 0.25rem !important;
 }
 
 input.custom-datepicker,

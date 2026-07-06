@@ -45,6 +45,7 @@ using GCTL.Service.Employees.EmployeeReport;
 using GCTL.Service.Employees.EmployeeSalary;
 using GCTL.Service.Employees.EmployeeTraining;
 using GCTL.Service.FileHandler;
+using GCTL.Service.HolidayLIst;
 using GCTL.Service.HRMsettings.ProbationService;
 using GCTL.Service.ImageFileHandler;
 using GCTL.Service.Language;
@@ -276,6 +277,9 @@ namespace GCTL_App.Extensions
             services.AddScoped<IOFRAdjustApproval, OFRAdjustApprovalService>();
             #endregion
 
+            #region Added by Samaul
+            services.AddScoped<IholidayListService, HolidayListService>();
+            #endregion
             #region e43
 
             #endregion

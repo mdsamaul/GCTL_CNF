@@ -38,13 +38,6 @@ using WordDocu = DocumentFormat.OpenXml.Wordprocessing;
 using WordPageSize = DocumentFormat.OpenXml.Wordprocessing.PageSize;
 
 
-
-
-
-
-
-
-
 namespace GCTL_NBR.Controllers.CustomerRelationshipManagement
 {
     public class SalesCustomerController : BaseController
