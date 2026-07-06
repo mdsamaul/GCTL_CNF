@@ -1,0 +1,131 @@
+﻿<style>
+    #button-div button {
+        padding: 8px 6px;
+        width: 80px;
+    }
+</style>
+
+
+<div class="card shadow-sm rounded-2">
+    <div class="px-1 card-header bg-light border-bottom d-flex justify-content-between align-items-center flex-wrap">
+        <div class="d-flex flex-nowrap justify-content-between w-100 align-items-center">
+            <div>
+                <h4 class="mb-0 heading-nowrap " style="font-size:14px">Payment Terms</h4>
+            </div>
+
+            <div class="d-flex gap-1" id="button-div">
+                <button type="submit" form="PaymentTermsForm" class="btn btn-sm btn-outline-primary saveBtn" id="saveBtn">
+                    <i class="fas fa-save me-1"></i> Save
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger deleteBtn" id="deleteBtn">
+                    <i class="fas fa-trash me-1"></i> Delete
+                </button>
+                <button type="reset" class="btn btn-sm btn-outline-secondary resetBtn">
+                    <i class="fas fa-eraser me-1"></i> Clear
+                </button>
+                <div class="dropdown">
+                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="fas fa-print me-1"></i> Print
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item export-pdf" href="#"><i class="fas fa-file-pdf me-1"></i> PDF</a></li>
+                        <li><a class="dropdown-item export-excel" href="#"><i class="fas fa-file-excel me-1"></i> Excel</a></li>
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-warning favBtn">
+                    <i class="fas fa-star me-1"></i> Fav
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <form id="PaymentTermsForm">
+            <input type="hidden" id="hiddenID" name="hiddenID" />
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input readonly type="text" class="form-control" name="PaymentTermsCode" id="PaymentTermsCode" placeholder="Payment Terms Code">
+                        <label for="PaymentTermsCode">Payment Terms Code</label>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6 form-floating">
+                    <select class="form-select" id="Type" name="Type">
+                       <option></option>
+                        <option value="Advance">Advance</option>
+                        <option value="Credit">Credit</option>
+                    </select>
+                    <label for="Type">Payment Type <span style="color:red">*</span></label>
+                </div>
+
+
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="Percentise" id="Percentise" placeholder="Enter Percentage">
+                        <label for="Percentise">Percentage</label>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="number" class="form-control" name="CreditDays" id="CreditDays" placeholder="Enter Credit Days">
+                        <label for="CreditDays">Credit Days</label>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="PaymentTermsName" id="PaymentTermsName" placeholder="Enter Payment Terms Name">
+                        <label for="PaymentTermsName">Payment Terms Name</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Creation/Modify Date Display -->
+            <div class="row g-3 mt-2">
+                <div class="col-md-6" id="lDateContainer" style="display: none;">
+                    <label class="form-label fw-bold text-muted small">Creation Date</label>
+                    <div id="displayLDate" class="bg-white p-3 border rounded-3"></div>
+                </div>
+                <div class="col-md-6" id="modifyDateContainer" style="display: none;">
+                    <label class="form-label fw-bold text-muted small">Modify Date</label>
+                    <div id="displayModifyDate" class="bg-white p-3 border rounded-3"></div>
+                </div>
+            </div>
+
+            <!-- Save Button (Bottom) -->
+            <div class="row mt-4">
+                <div class="col-12 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-outline-primary btn-sm saveBtn">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
+
+@* <script> *@
+@*     $(document).ready(function () { *@
+@*         $('#Type').on('change', function () { *@
+@*             if ($(this).val()) { *@
+@*                 $('#TypeLabel').hide();   *@
+@*             } else { *@
+@*                 $('#TypeLabel').show();  *@
+@*             } *@
+@*         }); *@
+@*     }); *@
+@* </script> *@
+@* <div class="col-md-6"> *@
+@*     <div class="form-floating"> *@
+@*         <input type="text" class="form-control" name="Type" id="Type" placeholder="Enter Payment Mode"> *@
+@*         <label for="Type">Payment Type<span style="color:red">*</span></label> *@
+@*     </div> *@
+@* </div> *@

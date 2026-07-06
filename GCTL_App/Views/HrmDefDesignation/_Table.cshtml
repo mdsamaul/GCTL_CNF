@@ -1,0 +1,76 @@
+﻿<div class="card table-card mb-0">
+    <div class="card-header">
+        <div class="row g-3 justify-content-between align-items-end">
+            <div class="col-4 col-sm-auto">
+                <div class="dropdown me-3">
+                    <button class="btn btn-phoenix-secondary dropdown-toggle" type="button" id="designation-pageSizeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Showing: <span id="designation-selectedPageSize">10</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="pageSizeDropdown">
+                        <li><a class="dropdown-item designation-dropdown-item" href="#" data-size="10">10</a></li>
+                        <li><a class="dropdown-item designation-dropdown-item" href="#" data-size="25">25</a></li>
+                        <li><a class="dropdown-item designation-dropdown-item" href="#" data-size="50">50</a></li>
+                        <li><a class="dropdown-item designation-dropdown-item" href="#" data-size="100">100</a></li>
+                        <li><a class="dropdown-item designation-dropdown-item" href="#" data-size="-1">All</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-8 col-sm-auto">
+                <div class="d-flex align-items-center">
+                    <div class="" id="designation-searchBox">
+                        <form class="position-relative" id="designation-searchForm">
+                            <input class="form-control search-input search ps-4" id="designation-searchInput" type="search" placeholder="Search here" aria-label="Search" />
+                            <div class="position-absolute top-0 start-0 h-100 d-flex justify-content-center align-items-center ps-1"><span class="fas fa-search search-box-icon"></span></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="table-scroll-area">
+            <table class="table fs-9 mb-0 border-top border-translucent table-striped" style="vertical-align: middle; text-align: center; table-layout: fixed; width: 100%;">
+                <thead>
+                    <tr>
+                        <th class="text-center text-middle align-middle ps-0" scope="col" style="width: 6%; padding-left: 0;">
+                            Sel<br />
+                            <input type="checkbox" id="designation-check-all" />
+                        </th>
+                        <th class="designation-sort align-middle ps-2" scope="col" data-sort="DesignationCode" style="width: 6%; padding-left: 0.5rem;">ID</th>
+                        <th class="designation-sort white-space-nowrap align-middle ps-0" scope="col" data-sort="DesignationName" style="width: 30%; padding-left: 0;">Designation</th>
+                        <th class="designation-sort white-space-nowrap align-middle ps-0" scope="col" data-sort="DesignationShortName" style="width: 10%; padding-left: 0;">Short <br />Name</th>
+                        <th class="designation-sort white-space-nowrap align-middle ps-0" scope="col" data-sort="BanglaDesignation" style="width: 18%; padding-left: 0; font-family: 'Noto Sans Bengali', sans-serif;">
+                            Designation<br /><small>(বাংলা)</small>
+                        </th>
+                        <th class="designation-sort white-space-nowrap align-middle ps-0" scope="col" data-sort="BanglaShortName" style="width: 12%; padding-left: 0; font-family: 'Noto Sans Bengali', sans-serif;">
+                            Short<br /><small>Name(বাংলা)</small>
+                        </th>
+                        <th class="designation-sort white-space-nowrap align-middle ps-0" scope="col" data-sort="GradeCode" style="width: 8%; padding-left: 0;">Grade <br /><small>No</small></th>
+                        <th class="designation-sort white-space-nowrap align-middle ps-0" scope="col" data-sort="StepNoId" style="width: 10%; padding-left: 0;">Step <br /> <small>No</small></th>
+                    </tr>
+
+                </thead>
+                <tbody class="list" id="designation-table-body">
+                    <tr class="no-data">
+                        <td colspan="6" class="text-center">No data available</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="designation-pagination-footer d-flex flex-wrap align-items-center justify-content-between py-2 pe-0 fs-9 border-translucent">
+        <div class="d-flex">
+            <p class="ps-3 mb-0 d-none d-sm-block me-3 fw-semibold text-body" id="designation-paginationInfo"></p>
+            <p class="mb-0 d-none d-sm-block me-3 fw-semibold text-body" data-list-info="data-list-info"></p>
+        </div>
+        <div class="d-flex">
+            <button class="page-link" data-list-pagination="prev" id="designation-prevPageBtn"><span class="fas fa-chevron-left"></span></button>
+            <ul class="mb-0 pagination" id="designation-paginationLinks"></ul>
+            <button class="page-link pe-3" data-list-pagination="next" id="designation-nextPageBtn"><span class="fas fa-chevron-right"></span></button>
+        </div>
+    </div>
+
+</div> 

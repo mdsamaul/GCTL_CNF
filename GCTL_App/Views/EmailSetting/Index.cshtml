@@ -1,0 +1,149 @@
+﻿@{
+    var activeTab = "EmailSetting";
+}
+
+<div class="col-12 col-md-12 col-lg-12 ">
+    <partial name="~/Views/Shared/AdminsettingsNavs/_NavSystemSettingsPartial.cshtml" model="activeTab" />
+
+    <div class="tab-content mt-3" id="myTabContent4">
+
+        <div class="tab-pane fade show active" id="tab-emailSettings" role="tabpanel" aria-labelledby="emailSettings-tab">
+
+            <div class="col-xl-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="border-bottom mb-3 pb-3">
+                            <h4>Email Settings</h4>
+                        </div>
+                    
+                        <form id="smtpForm" asp-controller="EmailSetting" asp-action="Save" method="post">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Organization</label>
+                                        <select class="form-select" name="OrganizationID">
+                                            <option value="">Select Organization</option>
+                                            @foreach (var org in ViewBag.Organizations)
+                                            {
+                                                <option value="@org.Id">@org.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Server Name</label>
+                                        <input class="form-control" type="text" name="ServerName" />
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">SMTP Authentication Required</label>
+                                        <select class="form-select" name="IsSMTPAuthenticationRequired">
+                                            <option value="true">YES</option>
+                                            <option value="false">NO</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">User Name</label>
+                                        <input class="form-control" type="text" name="UserName" />
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Password</label>
+                                        <input class="form-control" type="password" name="Password" />
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">SSL Required</label>
+                                        <select class="form-select" name="IsSSLRequired">
+                                            <option value="true">YES</option>
+                                            <option value="false">NO</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Port</label>
+                                        <select class="form-select" name="PortNumber">
+                                            <option value="587">587</option>
+                                            <option value="465">465</option>
+                                            <option value="25">25</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Priority</label>
+                                        <select class="form-select" name="PriorityIndex">
+                                            <option value="1">First</option>
+                                            <option value="2">Second</option>
+                                            <option value="3">Third</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Status</label>
+                                        <select class="form-select" name="IsActive">
+                                            <option value="true">Active</option>
+                                            <option value="false">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end mt-3">
+                                <button type="button" class="btn btn-outline-secondary me-2">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-xl-12">
+                    <partial name="_EmailSettingsTable" />
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+    <script src="~/js/pages/adminsettings/systemsettings/emailsetting.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#smtpFormd').on('submit', function (e) {
+                e.preventDefault();
+
+                var form = $(this);
+                var formData = form.serialize();
+
+                $.ajax({
+                    url: form.attr('action'),
+                    type: form.attr('method'),
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            toastr.success(response.message);    // ✅ SUCCESS TOAST
+                            form[0].reset(); // Optional: reset the form
+                        } else {
+                            toastr.error(response.message);      // ❌ ERROR TOAST
+                        }
+                    },
+                    error: function () {
+                        toastr.error('❌ A server error occurred. Please try again.');
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+
+
+

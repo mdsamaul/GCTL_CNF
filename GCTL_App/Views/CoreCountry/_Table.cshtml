@@ -1,0 +1,68 @@
+﻿<div class="card table-card mb-0">
+    <div class="card-header">
+        <div class="row g-3 justify-content-between align-items-end">
+            <div class="col-12 col-sm-auto">
+                <div class="dropdown me-3">
+                    <button class="btn btn-phoenix-secondary dropdown-toggle" type="button" id="country-pageSizeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Showing: <span id="country-selectedPageSize">10</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="pageSizeDropdown">
+                        <li><a class="dropdown-item country-dropdown-item" href="#" data-size="10">10</a></li>
+                        <li><a class="dropdown-item country-dropdown-item" href="#" data-size="25">25</a></li>
+                        <li><a class="dropdown-item country-dropdown-item" href="#" data-size="50">50</a></li>
+                        <li><a class="dropdown-item country-dropdown-item" href="#" data-size="100">100</a></li>
+                        <li><a class="dropdown-item country-dropdown-item" href="#" data-size="-1">All</a></li>
+                    </ul>
+                </div>
+            </div>         
+
+            <div class="col-8 col-sm-auto">
+                <div class="d-flex align-items-center">
+                    <div class="" id="country-searchBox">
+                        <form class="position-relative" id="country-searchForm">
+                            <input class="form-control search-input search ps-4" id="country-searchInput" type="search" placeholder="Search here" aria-label="Search" />
+                            <div class="position-absolute top-0 start-0 h-100 d-flex justify-content-center align-items-center ps-1"><span class="fas fa-search search-box-icon"></span></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div>
+            <table class="table fs-9 mb-0 border-top border-translucent table-striped" style="vertical-align: middle; text-align: center;">
+                <thead>
+                    <tr>
+                        <th class="text-center text-middle align-middle ps-2" scope="col" style="width: 5%; padding-left: 0;">
+                           
+                            <input type="checkbox" id="country-check-all" />
+                        </th>
+                        <th class="country-sort align-middle ps-2" scope="col" data-sort="CountryCode" style="padding-left: 0.5rem;">Country ID</th>
+                        <th class="country-sort white-space-nowrap align-middle ps-0" scope="col" data-sort="CountryName" style="padding-left: 0; white-space: nowrap;">Country Name</th>
+                        <th class="country-sort white-space-nowrap align-middle ps-0" scope="col" data-sort="Ioccode" style="padding-left: 0; white-space: nowrap;">IOC Code</th>
+                        <th class="country-sort white-space-nowrap align-middle ps-0" scope="col" data-sort="Isocode" style="padding-left: 0; white-space: nowrap;">ISO Code</th>
+                    </tr>
+                </thead>
+                <tbody class="list" id="country-table-body">
+                    <tr class="no-data">
+                        <td colspan="6" class="text-center">No data available</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="country-pagination-footer d-flex flex-wrap align-items-center justify-content-between py-2 pe-0 fs-9 border-translucent">
+        <div class="d-flex">
+            <p class="ps-3 mb-0 d-none d-sm-block me-3 fw-semibold text-body" id="country-paginationInfo"></p>
+            <p class="mb-0 d-none d-sm-block me-3 fw-semibold text-body" data-list-info="data-list-info"></p>
+        </div>
+        <div class="d-flex">
+            <button class="page-link" data-list-pagination="prev" id="country-prevPageBtn"><span class="fas fa-chevron-left"></span></button>
+            <ul class="mb-0 pagination" id="country-paginationLinks"></ul>
+            <button class="page-link pe-3" data-list-pagination="next" id="country-nextPageBtn"><span class="fas fa-chevron-right"></span></button>
+        </div>
+    </div>
+
+</div> 

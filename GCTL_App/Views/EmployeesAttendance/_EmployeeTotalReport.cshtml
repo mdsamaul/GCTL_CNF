@@ -1,0 +1,179 @@
+﻿@{
+	var fullName = ViewData["FullName"] as string;
+	var profilePicturePath = ViewData["ProfilePicturePath"] as string;
+	var current = (string)ViewData["CurrentTime"];
+	var isoNow = (string)ViewData["NowIso"];
+	var tzId = (string)ViewData["TzId"]; // IANA works best (e.g., "Asia/Dhaka")
+}
+
+
+
+<div class="col-xl-3 col-lg-4 d-flex">
+	<div class="card flex-fill">
+		<div class="card-body">
+			<div class="mb-3 text-center">
+				<h6 class="fw-medium text-gray-5 mb-2">Hello, @fullName</h6>
+				<h4>@ViewData["CurrentTime"]</h4>
+			</div>
+			<div class="attendance-circle-progress mx-auto mb-3" data-value='65'>
+
+				<div class="avatar avatar-4xl start-50 translate-middle-x">
+					<img class="rounded-circle " src="@ViewData["ProfilePicturePath"]" alt="Img">
+				</div>
+			</div>
+			<div class="text-center">
+				<div class="badge text-bg-danger mb-3 px-5 py-2">
+					@if (ViewData["CheckInTime"] == null)
+					{
+						<text>Absent</text>
+					}
+					else
+					{
+						<text>Production: @ViewData["ProductionTime"] </text>  <!-- Access the first element of the array -->
+					}
+				</div>
+				<h6 class="fw-medium d-flex align-items-center justify-content-center mb-3">
+					<i class="ti ti-fingerprint text-primary me-1"></i>
+					@if (ViewData["CheckInTime"] != null)
+                    {
+						<text> Punch In at @ViewData["CheckInTime"]</text>
+                    }
+				</h6>
+				<a href="#" class="btn btn-dark w-100">Punch Out</a>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="col-xl-9 col-lg-8 d-flex">
+	<div class="row flex-fill">
+
+		<div class="col-xl-3 col-md-6 mb-3">
+			<div class="card">
+				<div class="card-body">
+					<div class="border-bottom mb-2 pb-2">
+						<span class="avatar avatar-sm mb-2"><i class="ti ti-clock-stop"></i></span>
+						<h2 class="mb-2">@ViewData["ProductionTime"] / <span class="fs-20 text-gray-5"> @ViewData["TotalWorkingHours"]</span></h2>
+						<p class="fw-medium text-truncate">Total Hours Today</p>
+					</div>
+					<div>
+						<p class="d-flex align-items-center fs-13">
+							<i class="fa fa-arrow-up fs-12 me-2"></i>
+							<span>5% This Week</span>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xl-3 col-md-6 mb-3">
+			<div class="card">
+				<div class="card-body">
+					<div class="border-bottom mb-2 pb-2">
+						<span class="avatar avatar-sm  mb-2"><i class="ti ti-clock-up"></i></span>
+						<h2 class="mb-2">@ViewData["TotalHoursWeek"] / <span class="fs-20 text-gray-5"> 49 </span></h2>
+						<p class="fw-medium text-truncate">Total Hours Week</p>
+					</div>
+					<div>
+						<p class="d-flex align-items-center fs-13">
+							<i class="fa fa-arrow-up fs-12 me-2"></i>
+							<span>7% Last Week</span>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-3 col-md-6 mb-3">
+			<div class="card">
+				<div class="card-body">
+					<div class="border-bottom mb-2 pb-2">
+						<span class="avatar avatar-sm  mb-2"><i class="ti ti-calendar-up"></i></span>
+						<h2 class="mb-2">75 / <span class="fs-20 text-gray-5"> 98</span></h2>
+						<p class="fw-medium text-truncate">Total Hours Month</p>
+					</div>
+					<div>
+						<p class="d-flex align-items-center fs-13 text-truncate">
+							<i class="fa fa-arrow-down fs-12 me-2"></i>
+							<span>8% Last Month</span>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xl-3 col-md-6 mb-3">
+			<div class="card">
+				<div class="card-body">
+					<div class="border-bottom mb-2 pb-2">
+						<span class="avatar avatar-sm bg-pink mb-2"><i class="ti ti-calendar-star"></i></span>
+						<h2 class="mb-2">16 / <span class="fs-20 text-gray-5"> 28</span></h2>
+						<p class="fw-medium text-truncate">Overtime this Month</p>
+					</div>
+					<div>
+						<p class="d-flex align-items-center fs-13 text-truncate">
+							<i class="fa fa-arrow-down fs-12 me-2"></i>
+							<span>6% Last Month</span>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Time Summary -->
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-body">
+					<div class="row">
+						<div class="col-xl-3">
+							<div class="mb-3">
+								<p class="mb-1"><i class="ti ti-point-filled text-dark-transparent me-1"></i>Total Working hours</p>
+								<h3 id="totalWorkingHours">--</h3>
+							</div>
+						</div>
+						<div class="col-xl-3">
+							<div class="mb-3">
+								<p class="mb-1"><i class="ti ti-point-filled text-success me-1"></i>Productive Hours</p>
+								<h3 id="productiveHours">--</h3>
+							</div>
+						</div>
+						<div class="col-xl-3">
+							<div class="mb-3">
+								<p class="mb-1"><i class="ti ti-point-filled text-warning me-1"></i>Break hours</p>
+								<h3 id="breakHours">--</h3>
+							</div>
+						</div>
+						<div class="col-xl-3">
+							<div class="mb-3">
+								<p class="mb-1"><i class="ti ti-point-filled text-info me-1"></i>Overtime</p>
+								<h3 id="overtime">--</h3>
+							</div>
+						</div>
+					</div>
+
+					<!-- Progress Bars -->
+					<div class="row">
+						<div class="col-md-12">
+							<div class="progress bg-transparent-dark mb-3 position-relative" style="height: 24px;" id="progressBars">
+								
+							</div>
+						</div>
+
+						<!-- Timeline Labels -->
+						<div class="col-md-12">
+							<div class="d-flex align-items-center justify-content-between flex-wrap row-gap-2" id="timelineLabels">
+								<!-- JS will dynamically insert <span class="fs-10">HH:MM</span> here -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		
+		@* <div class="progress-bar bg-white rounded" id="progressTotal" role="progressbar" style="width: 100%; position: absolute;"></div>
+								<div class="progress-bar bg-success rounded" id="progressProductive"></div>
+								<div class="progress-bar bg-warning rounded" id="progressBreak"></div>
+								<div class="progress-bar bg-info rounded" id="progressOvertime"></div> *@
+
+
+	</div>
+</div>

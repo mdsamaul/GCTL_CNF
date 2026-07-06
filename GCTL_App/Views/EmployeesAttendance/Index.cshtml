@@ -1,0 +1,78 @@
+﻿<script src="~/js/layout/echarts/echarts.min.js"></script>
+
+@{
+    
+}
+ <!-- Breadcrumb -->
+<div class="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
+    <div class="my-auto mb-2">
+        <h2 class="mb-1">Attendance Employee</h2>
+        <nav>
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="../../dashboard/atms.html"><i class="ti ti-smart-home"></i></a>
+                </li>
+                <li class="breadcrumb-item">
+                    Employee
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Attendance Employee</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="d-flex my-xl-auto right-content align-items-center flex-wrap ">
+        <div class="me-2 mb-2">
+            <div class="d-flex align-items-center border bg-white rounded p-1 me-2 icon-list">
+                <a href="employee-attendance-ui.html" class="btn btn-icon btn-sm active bg-primary text-white">
+                    <i class="ti ti-brand-days-counter"></i>
+                </a>
+                <a href="admin-attendance-ui.html" class="btn btn-icon btn-sm" aria-disabled="true">
+                    <i class="ti ti-calendar-event"></i>
+                </a>
+            </div>
+        </div>
+        <div class="me-2 mb-2">
+            <div class="dropdown">
+                <a href="javascript:void(0);" class="dropdown-toggle btn btn-white d-inline-flex align-items-center"
+                   data-bs-toggle="dropdown">
+                    <i class="ti ti-file-export me-1"></i>Export
+                </a>
+                <ul class="dropdown-menu  dropdown-menu-end p-3">
+                    <li>
+                        <a href="javascript:void(0);" class="dropdown-item rounded-1">
+                            <i class="ti ti-file-type-pdf me-1"></i>Export
+                            as PDF
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="dropdown-item rounded-1">
+                            <i class="ti ti-file-type-xls me-1"></i>Export
+                            as Excel
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="mb-2">
+            <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-target="#attendance_report"
+               data-bs-toggle="modal"><i class="ti ti-file-analytics me-2"></i>Report</a>
+        </div>
+
+    </div>
+</div>
+<!-- /Breadcrumb -->
+
+<div class="row">
+	<partial name="_EmployeeTotalReport"/>
+</div>  
+
+<partial name="_MonthlyAttendanceStatus" /> 
+<partial name="_AttendanceStatus" />
+
+<script>
+
+</script>
+@section Scripts {
+
+    <script src="~/js/pages/attendancemanagement/employeeateendencereport/attendencestatus.js"></script>
+}

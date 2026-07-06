@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GCTL.Core.ViewModels.RoleModule
+{
+    public class RoleManagementViewModel:BaseViewModel   // inherit BaseVM by 404
+    {
+        [Required]
+        [Display(Name = "Role Name")]
+        public string? NewRoleName { get; set; }
+
+        public int? SelectedCompanyId { get; set; }
+        public int? SelectedTenantId { get; set; } // 404
+        public List<UserRoleAssignment>? Users { get; set; }
+
+        public Dictionary<string, List<UserRoleAssignment>>? RoleUserAssignments { get; set; }
+    }
+}

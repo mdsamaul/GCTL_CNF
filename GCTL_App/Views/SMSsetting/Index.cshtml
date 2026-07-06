@@ -1,0 +1,126 @@
+﻿@{
+    var activeTab = "SMSSetting";
+}
+
+<partial name="~/Views/Shared/AdminsettingsNavs/_NavSystemSettingsPartial.cshtml" model="activeTab" />
+
+<div class="col-12 col-md-12 col-lg-12 ">
+
+    <div class="tab-content mt-3" id="myTabContent4">
+
+        
+        <div class="tab-pane fade show active" id="tab-smsSettings" role="tabpanel" aria-labelledby="smsSettings-tab">
+
+            <div class="col-xl-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="border-bottom mb-3 pb-3">
+                            <h4>SMS Settings</h4>
+                        </div>
+                        <form action="settings-ui.html">
+                            <div class=" mb-3">
+
+                                <div class="row">
+
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="exampleFormControlInput">Company Name</label>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option>GCTL</option>
+                                                <option>CSL</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="exampleFormControlInput">Server Name</label>
+                                            <input class="form-control" id="exampleFormControlInput" type="text" placeholder="Server Name" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="exampleFormControlInput">User Name</label>
+                                            <input class="form-control" id="exampleFormControlInput" type="text" placeholder="User Name" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="exampleFormControlInput">Password</label>
+                                            <input class="form-control" id="exampleFormControlInput" type="password" placeholder="Password" />
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="exampleFormControlInput">Gateway</label>
+                                            <input class="form-control" id="exampleFormControlInput" type="text" placeholder="Gateway" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="exampleFormControlInput">API</label>
+                                            <input class="form-control" id="exampleFormControlInput" type="text" placeholder="API" />
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="exampleFormControlInput">Mobile</label>
+                                            <input class="form-control" id="exampleFormControlInput" type="text" placeholder="Mobile" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="exampleFormControlInput">Priority</label>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option>First Priority</option>
+                                                <option>Second Priority</option>
+                                                <option>Third Priority</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="exampleFormControlInput">Status</label>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option>Active</option>
+                                                <option>Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="d-flex align-items-center justify-content-end">
+                                <button type="button" class="btn btn-outline-light border me-3">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+                  
+
+
+                
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<partial name="_ConfirmDelete" />
+<script src="~/js/pages/adminsettings/systemsettings/smsconfigsettings.js"></script>

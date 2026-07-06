@@ -1,0 +1,382 @@
+﻿@model GCTL.Core.ViewModels.RoleModule.PermissionViewModel
+@{
+    ViewData["Title"] = "Role Permissions";
+}
+
+
+<link href="~/choices/choices.min.css" rel="stylesheet" />
+
+
+<style>
+
+
+    .table-primary {
+        background-color: #f8f9fa !important; /* Light Gray */
+        padding-left: 2rem;
+        color: #007bff; /* Blue text color */
+    }
+
+    .table-secondary {
+        background-color: #e9ecef !important; /* Slightly Darker Gray */
+        color: #007bff; /* Blue text color */
+    }
+
+    .table-tertiary {
+        background-color: #dee2e6 !important; /* Even Darker Gray */
+        padding-left: 2rem !important; /* Same indentation as primary rows */
+        text-align: left; /* Align text to the left */
+        color: #007bff; /* Blue text color */
+    }
+
+    .pl-4 {
+        padding-left: 3rem !important;
+    }
+
+    .pl-5 {
+        padding-left: 4rem !important;
+    }
+
+    .hidden-row {
+        display: none;
+    }
+
+    .select-all {
+        margin-left: 10px;
+    }
+
+    .select-row {
+        padding: 0 !important;
+        margin-left: 10px;
+    }
+
+    .table th,
+    .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+        .table td input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .table td a {
+            display: block;
+            text-align: left;
+            padding-left: 1rem;
+            color: #007bff; /* Blue text color for links */
+        }
+
+    .table th {
+        font-weight: bold;
+    }
+
+    /* Styling for module dropdowns */
+    .module-dropdown-indicator {
+        cursor: pointer;
+        margin-right: 5px;
+    }
+
+    /* Ensure tertiary rows have same color and alignment as primary and secondary rows */
+    .table-tertiary td {
+        color: #007bff; /* Blue color for text */
+        font-weight: normal; /* Same font weight as secondary rows */
+    }
+
+        /* Ensure links in tertiary rows follow the same color as in primary and secondary rows */
+        .table-tertiary td a {
+            color: #007bff; /* Blue link color for tertiary rows */
+        }
+</style>
+
+<main role="main" class="container-fluid px-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Role Permissions</h2>
+    </div>
+
+    <!-- Role Selection and Permissions Section -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <!-- Role Selection -->
+            <div class="row mb-4">
+                <!-- Company Dropdown -->
+                <div class="col-md-3">
+                    <div class="form-floating">
+                        <select id="companySelect" class="form-select">
+                            <option value="">-- Select Company --</option>
+                            <!-- Check if the User's OrganizationID is null (super admin) -->
+                            @if (ViewBag.UserCompanyId == null)
+                            {
+                                <option value="0">All Companies</option>
+                            }
+                           
+                            @if (ViewBag.Companies != null)
+                            {
+                                foreach (var company in ViewBag.Companies)
+                                {
+                                    <option value="@company.Id">@company.Name</option>
+                                }
+                            }
+                        </select>
+                        <label for="companySelect" class="font-weight-bold">Select Company</label>
+                    </div>
+                </div>
+
+                <!-- Role Dropdown (Your Original Code) -->
+                <div class="col-md-3">
+                    <div class="form-floating">
+                        <select id="roleSelect2" class="form-select">
+                            @if (ViewBag.Roles != null)
+                            {
+                                foreach (var role in ViewBag.Roles)
+                                {
+                                    <option value="@role.Id">@role.Name</option>
+                                }
+                            }
+                        </select>
+                        <label for="roleSelect2" class="font-weight-bold">Select Role</label>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Permissions Table -->
+            <div class="table-responsive">
+                <table class="table table-hover table-borderless" id="permissionTableContainer">
+                    <!-- Table headers -->
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Module</th>
+                            <th>View</th>
+                            <th>Create</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                            <th>Export</th>
+                            <th>Download</th>
+                        </tr>
+                    </thead>
+                    <!-- Table body will be dynamically loaded here -->
+                    <tbody>
+                        <!-- Dynamic content will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- Save Button -->
+            <div class="text-end m-2">
+                <button id="savePermissions" class="btn btn-primary btn-lg">Save Permissions</button>
+            </div>
+        </div>
+        
+    </div>
+
+    
+    <div class="card mt-3 mb-3">
+        <div class="card-body">
+            <div class="border-bottom mb-3 pb-3">
+                <h4>Setup Permissions for Page Elements</h4>
+            </div>
+            <form method="post" enctype="multipart/form-data" id="permissions-form">
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+
+                    <!-- Company Selection -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="companySelection">Company</label>
+                        <select class="form-select choiceDD" id="companySelection" name="OrganizationID">
+                            <option value="">Select a Company</option>
+                            @foreach (var company in ViewBag.CompanyElement)
+                            {
+                                <option value="@company.OrganizationID">@company.OrganizationName</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Role Selection (populated by AJAX) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="roleSelection">Role</label>
+                        <select class="form-select" id="roleSelection" name="RoleId">
+                            <option value="">Select a Role</option>
+                        </select>
+                    </div>
+
+                    <!-- Page Selection -->
+                    <div class="col-md-6 mb-3">
+                         <label class="form-label">Page</label>
+                            <select class="form-select" id="pageSelection" name="PageId">
+                                <option value="">Select a Page</option>
+                                @foreach (var pagee in ViewBag.Pages)
+                                {
+                                    <option value="@pagee.Id">@pagee.Name</option>
+                                }
+                            </select>
+                    </div>
+                   @*  <div class="form-floating form-floating-advance-select col-md-6 mb-3">
+                        <select class="form-select" id="elementSelection" name="ElementKeys" multiple
+                                
+                                data-options='{"removeItemButton":true,"placeholder":true}'>
+                            <!-- Options will be loaded dynamically -->
+                        </select>
+                        <label for="elementSelection">Elements</label>
+                    </div> *@
+                    <!-- Element Multi-Select (populated by AJAX) -->
+                  @*   <div class="col-md-6 mb-3">
+                        <label class="form-label" for="elementSelection">Elements</label>
+                        <select class="form-select" id="elementSelection" name="ElementKeys" multiple>
+                            <!-- dynamically populated -->
+                        </select>
+                    </div> *@
+                    <!-- Match Bootstrap floating label style -->
+                   @*  <div class="form-floating form-floating-advance-select col-md-6 mb-3">
+                        <select class="form-select" id="elementSelection" name="ElementKeys" multiple
+                                data-choices="data-choices"
+                                data-options='{"removeItemButton":true,"placeholder":true}'>
+                            <!-- Will be populated dynamically -->
+                        </select>
+                        <label for="elementSelection">Elements</label>
+                    </div> *@
+
+
+                    <!-- Element Single Select (populated by AJAX) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label " for="elementSelection">Element</label>
+                        <select class="form-select choiceDD" id="elementSelection" name="ElementKey" multiple>
+                            <option value="">Select an Element</option>
+                            <!-- Dynamically loaded options go here -->
+                        </select>
+                    </div>
+
+
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="reset" class="btn btn-outline-secondary me-2">Reset</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+
+    <div class="card mt-3 mb-3">
+        <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3 mb-4">
+            <h4 class="mb-1">@Html.SmartLocalize("Page Elements List")</h4>
+            @* <div class="d-flex my-xl-auto right-content align-items-center flex-wrap row-gap-3">
+                                <div class="dropdown me-3">
+                                    <select class="form-select" id="addEmailConfig-dd-search" asp-items="ViewBag.OrganizationDD as SelectList" data-choices="data-choices" size="1" required="required" name="organizerSingle" data-options='{"removeItemButton":true,"placeholder":true}'>
+                                        <option value="">@Html.SmartLocalize("Company Name")</option>
+                                    </select>
+                                </div>
+                            </div> *@
+        </div>
+
+        <div class="border-translucent p-3">
+            <div class="row g-3 justify-content-between align-items-end mb-4">
+                <div class="col-12 col-sm-auto">
+                    <div class="d-flex align-items-center me-3" style="width: auto;">
+                        <span class="ms-2">@Html.SmartLocalize("Showing"):</span> &nbsp;
+                        <div style="width: 100%;">
+                            <select id="PageElements-pageSizeSelect" class="form-select form-select-sm" tabindex="10">
+                                <option class="dropdown-item" value="5">@Html.SmartLocalize("5")</option>
+                                <option class="dropdown-item" value="10">@Html.SmartLocalize("10")</option>
+                                <option class="dropdown-item" value="25">@Html.SmartLocalize("25")</option>
+                                <option class="dropdown-item" value="50">@Html.SmartLocalize("50")</option>
+                                <option class="dropdown-item" value="100">@Html.SmartLocalize("100")</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-auto">
+                    <div class="d-flex align-items-center">
+                        <div class="d-none me-3" id="PageElements-bulkSelectActions">
+                            <div class="position-relative">
+                                <button type="button" class="btn btn-phoenix-danger btn-sm ms-2" id="PageElements-bulkDelBtn">@Html.SmartLocalize("Delete")</button>
+                            </div>
+                        </div>
+
+                        <div class="search-box me-3" id="addShift-searchBox">
+                            <form class="position-relative" id="PageElements-searchForm">
+                                <input class="form-control search-input search" id="PageElements-searchInput" type="search" placeholder="@Html.SmartLocalize("Search here")" aria-label="Search" />
+                                <span class="fas fa-search search-box-icon"></span>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive scrollbar mx-n1 px-1">
+                <table class="table table-sm fs-9 leads-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center text-middle align-middle ps-0" scope="col" style="width: 5%;">
+                                <input type="checkbox" class="form-check-input" id="PageElements-check-all" />
+                            </th>
+                            <th class="sort align-middle ps-4 pe-5 text-uppercase text-nowrap" scope="col" data-sort="EmailCompanyName">@Html.SmartLocalize("SL")</th>
+                            <th class="sort align-middle ps-4 pe-5 text-uppercase text-nowrap" scope="col" data-sort="EmailCompanyName">@Html.SmartLocalize("Role Name")</th>
+                            <th class="sort align-middle ps-4 pe-5 text-uppercase text-nowrap" scope="col" data-sort="EmailServerName">@Html.SmartLocalize("Page Name")</th>
+                            <th class="sort align-middle ps-4 pe-5 text-uppercase text-nowrap" scope="col" data-sort="EmailSSLRequired">@Html.SmartLocalize("Element Name")</th>
+                            <th class="text-end align-middle pe-0 ps-5 text-uppercase" scope="col">@Html.SmartLocalize("Action")</th>
+                        </tr>
+                    </thead>
+                    <tbody id="PageElements-tBody">
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex flex-wrap align-items-center justify-content-between py-3 pe-0 fs-9 border-bottom border-translucent">
+                <div class="d-flex">
+                    <p class="mb-0 d-none d-sm-block me-3 fw-semibold text-body" id="PageElements-paginationInfo"></p>
+
+                    <p class="mb-0 d-none d-sm-block me-3 fw-semibold text-body" data-list-info="data-list-info"></p>
+                </div>
+                <div class="d-flex">
+                    <button class="page-link" data-list-pagination="prev" id="PageElements-prevPageBtn"><span class="fas fa-chevron-left"></span></button>
+                    <ul class="mb-0 pagination" id="PageElements-paginationLinks"></ul>
+                    <button class="page-link pe-0" data-list-pagination="next" id="PageElements-nextPageBtn"><span class="fas fa-chevron-right"></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<partial name="~/Views/Shared/RolesAlert/_ConfirmPermissionChangeModal.cshtml" />
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+
+<script src="~/choices/choices.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        $('#companySelect').change(function () {
+            var companyId = $(this).val();
+            $('#roleSelect2').empty().append('<option>Loading...</option>');
+
+            if (companyId) {
+                $.ajax({
+                    url: '/RolePermission/GetRolesByCompany', // 🔁 update controller name
+                    type: 'GET',
+                    data: { companyId: companyId || null},
+                    success: function (data) {
+                        $('#roleSelect2').empty().append('<option value="">-- Select Role --</option>');
+                        $.each(data, function (i, role) {
+                            $('#roleSelect2').append('<option value="' + role.id + '">' + role.name + '</option>');
+                        });
+                    },
+                    error: function () {
+                        $('#roleSelect2').empty().append('<option>Error loading roles</option>');
+                    }
+                });
+            } else {
+                $('#roleSelect2').empty().append('<option value="">-- Select Role --</option>');
+            }
+        });
+    });
+</script>
+<script src="~/js/pages/authjs/rolepermission.js"></script>
+<script src="~/js/pages/authjs/elementpermission.js"></script>

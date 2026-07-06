@@ -1,0 +1,209 @@
+﻿@using GCTL.Core.Configurations
+@using GCTL_App.ViewComponents
+@inject Microsoft.Extensions.Options.IOptions<ApplicationSettings> AppSettings
+
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr" data-navigation-type="default" data-navbar-horizontal-shape="default">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> @Html.SmartLocalize("GCTL-HRM") &nbsp; @ViewData["Title"]</title>
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="~/img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/img/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" href="~/img/favicons/favicon.ico">
+    <link rel="manifest" href="~/img/favicons/manifest.json">
+    <meta name="msapplication-TileImage" content="~/img/favicons/mstile-150x150.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+
+    <!-- Vendor CSS -->
+    <link href="~/js/vendors/simplebar/simplebar.min.css" rel="stylesheet" />
+    <link href="~/js/vendors/choices/choices.min.css" rel="stylesheet" />
+    <link href="~/js/layout/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="~/js/vendors/flatpickr/flatpickr.min.css" rel="stylesheet" />
+    <link href="~/js/vendors/dropzone/dropzone.css" rel="stylesheet" />
+    <link href="~/js/vendors/leaflet/leaflet.css" rel="stylesheet" />
+    <link href="~/js/vendors/leaflet.markercluster/markercluster.default.css" rel="stylesheet" />
+    <link href="~/js/vendors/leaflet.markercluster/markercluster.css" rel="stylesheet" />
+
+    <!-- CoreUI CSS -->
+    <link href="~/js/layout/coreui/coreui.min.css" rel="stylesheet" />
+
+	<!-- Theme CSS -->
+    <link href="~/css/theme.min.css" rel="stylesheet" id="style-default" />
+    <link href="~/css/user.min.css" rel="stylesheet" id="user-style-default" />
+    <link href="~/css/theme-rtl.css" rel="stylesheet" id="style-rtl" />
+    <link href="~/css/user-rtl.min.css" rel="stylesheet" id="user-style-rtl" />
+    <link href="~/js/layout/toastr.js/toastr.min.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    <!-- ✅ jQuery Date Range Picker CSS  added By 404-->
+	<link href="~/js/layout/jquery-date-range-picker/daterangepicker.min.css" rel="stylesheet" />
+
+
+    @* cdn will have to remove on deploy time *@
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/css/intlTelInput.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="~/css/Layout.css" rel="stylesheet" />
+
+    <link href="~/lib/custom-select-2/custom-select-2.css" rel="stylesheet" />
+    <link href="~/lib/custom-datepicker/custom-datepicker.css" rel="stylesheet" />
+    <link href="~/lib/custom-inline-timepicker/custom-inline-timepicker.css" rel="stylesheet" />
+    @* 
+    <style>
+        .flatpickr-calendar.noCalendar.hasTime .flatpickr-time {
+            height: auto;
+            background: #f9f9f9;
+        }
+        /*  added By 404 */
+        .req::after {
+            content: '*';
+            color: red;
+            margin-left: 2px;
+        }
+
+        .form-multi-select-dropdown .form-multi-select-options {
+            max-height: 300px; /* You can adjust this height */
+            overflow-y: auto;
+        }
+
+        /* Calendar Start */
+        .flatpickr-calendar {
+            background-color: #fff !important;
+        }
+
+        span.flatpickr-weekday, .flatpickr-weekdaycontainer, .flatpickr-months .flatpickr-month {
+            background-color: #fff !important;
+            color: var(--phoenix-body-color) !important;
+        }
+
+            .flatpickr-months .flatpickr-month .flatpickr-current-month {
+                background-color: #fff !important;
+                font-size: 1.5625rem;
+            }
+
+                .flatpickr-months .flatpickr-month .flatpickr-current-month .flatpickr-monthDropdown-months {
+                    font-weight: 700;
+                    background-color: rgba(0, 0, 0, 0);
+                    color: #141824;
+                    /* font-size: large; */
+                }
+
+        /* Calendar End */
+
+        .date-input {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .date-picker-wrapper .footer {
+            display: none !important;
+        }
+    </style> *@
+    @RenderSection("Styles", required: false)
+</head>
+
+<body>
+    <div class="col-auto">
+        <main class="main" id="top">
+            @await Component.InvokeAsync(typeof(MenuViewComponents))
+            <partial name="_Header" />
+
+            <div class="content card bg-light">
+                <div id="mainContent">
+                    @RenderBody()
+                </div>
+                <partial name="_loadingIndicator" />
+                <footer class="footer position-absolute">
+                    <div class="row g-0 justify-content-between align-items-center h-100">
+                        <div class="col-12 col-sm-auto text-center">
+                            <p class="mb-0 mt-2 mt-sm-0 text-body">
+                                @Html.SmartLocalize("Thank you for creating with GCTL")
+                                <span class="d-none d-sm-inline-block mx-1">|</span>
+                                <br class="d-sm-none" />2024 &copy;
+                                <a class="mx-1" href="http://gctlinfosys.com" target="_blank">@Html.SmartLocalize("GCTL")</a>
+                            </p>
+                        </div>
+                        <div class="col-12 col-sm-auto text-center">
+                            <p class="mb-0 text-body-tertiary text-opacity-85">v1.19.0</p>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+
+            <partial name="_SearchBoxModal" />
+           
+        </main>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <!-- Core Libraries -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/vendors/popper/popper.min.js"></script>
+    <script src="~/js/vendors/bootstrap/bootstrap.min.js"></script>
+    <script src="~/js/vendors/dropzone/dropzone-min.js"></script>
+    <!-- Vendor Plugins -->
+    <script src="~/js/vendors/simplebar/simplebar.min.js"></script>
+    <script src="~/js/vendors/anchorjs/anchor.min.js"></script>
+    <script src="~/js/vendors/is/is.min.js"></script>
+    <script src="~/js/vendors/fontawesome/all.min.js"></script>
+    <script src="~/js/vendors/lodash/lodash.min.js"></script>
+    <script src="~/js/vendors/feather-icons/feather.min.js"></script>
+    <script src="~/js/vendors/dayjs/dayjs.min.js"></script>
+    <script src="~/js/vendors/choices/choices.min.js"></script>
+    <script src="~/js/layout/select2/js/select2.min.js"></script>
+    <script src="~/js/vendors/flatpickr/flatpickr.min.js"></script>
+	<script src="~/js/layout/toastr.js/toastr.min.js"></script>
+    <script src="~/js/vendors/echarts/echarts.min.js"></script>
+    <script src="~/js/vendors/leaflet/leaflet.js"></script>
+    <script src="~/js/vendors/leaflet.markercluster/leaflet.markercluster.js"></script>
+    <script src="~/js/vendors/leaflet.tilelayer.colorfilter/leaflet-tilelayer-colorfilter.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+   
+    <!-- CoreUI JavaScript -->
+    <script src="~/js/layout/coreui/coreui.bundle.min.js"></script>
+
+    <!-- App Configuration -->
+    <script src="~/js/config.js"></script>
+    <script src="~/js/phoenix.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <!-- choice Manager -->
+    <script src="~/js/layout/choicemanager.js"></script>
+	<script src="~/js/layout/flatpickerauto.js"></script>
+	<script src="~/js/layout/inputvalidationmanager.js"></script>
+    <script src="~/js/layout/DynaqmicTable/DynamicTable.js"></script>
+
+
+    <!-- Layout Scripts -->
+    <script src="~/js/layout/language/language.js"></script>
+    <script src="~/js/layout/layout.js"></script>
+
+    <!-- Layout Scripts For Date Format 404 -->
+    <script src="~/js/pages/datepickercustom/datepickercustomby404.js"></script>
+    <script src="~/js/pages/allnotifications/notifications.js"></script>
+    <!-- ✅ Moment.js (required by daterangepicker) 404 -->
+	<script src="~/js/layout/moment.js/moment.min.js"></script>
+
+    <!-- ✅ jQuery Date Range Picker JS  404-->
+	<script src="~/js/layout/jquery-date-range-picker/jquery.daterangepicker.min.js"></script>
+    <script src="~/lib/custom-select-2/custom-select-2.js"></script>
+    <script src="~/js/layout/select2/js/custom-select-2.js"></script>
+    <script src="~/lib/custom-datepicker/custom-datepicker.js"></script>
+    <script src="~/lib/custom-inline-timepicker/custom-inline-timepicker.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

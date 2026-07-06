@@ -1,0 +1,88 @@
+﻿@{
+    var mainTab = "CompanySetting";
+    var subTab = "WeekendSettingss";
+}
+
+<partial name="~/Views/Shared/AdminsettingsNavs/CompanySettingsNavs/_MainSettingsTabPartial.cshtml" model="mainTab" />
+<partial name="~/Views/Shared/AdminsettingsNavs/CompanySettingsNavs/_NavCompanySettingsPartial.cshtml" model="subTab" />
+
+<div class="col-xl-12 mt-3">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="border-bottom mb-3 pb-3">
+                <h4>Weekend Settings</h4>
+            </div>
+            <form id="weekendForm" asp-controller="WeekendSettings" asp-action="Creates" method="post">
+                <div class=" mb-3">
+
+                    <div class="row">
+
+                        <!-- Organization Dropdown -->
+                        <div class="col-sm-6 col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Organization Name</label>
+                                <select id="OrganizationID" name="OrganizationID" class="form-select choiceDD">
+                                    <option value="">-- Select Organization --</option>
+                                    @if (ViewBag.Organizations != null)
+                                    {
+                                        foreach (var org in ViewBag.Organizations)
+                                        {
+                                            <option value="@org.Value">@org.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Branch Dropdown -->
+                        <div class="col-sm-6 col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Branch Name</label>
+                                <select id="OrganizationBranchID" name="OrganizationBranchID" class="form-select choiceDD">
+                                    <option value="">-- Select Branch --</option>
+                                    @* will be filled by JS *@
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Weekend Day</label>
+                                <select id="WeekendDays" name="WeekendDays" class="form-select choiceDD" multiple>
+                                    <option value="">-- Select Weekend Day --</option>
+                                    @if (ViewBag.WeekendDays != null)
+                                    {
+                                        foreach (var day in ViewBag.WeekendDays)
+                                        {
+                                            <option value="@day.Value">@day.Text</option>
+                                        }
+                                    }
+                                    
+
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="d-flex align-items-center justify-content-end">
+                    <button type="button" class="btn btn-outline-secondary me-3">Reset</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="header">
+        <span title="@ViewBag.selectZone">
+            Created at (local): <strong>@(ViewBag.selectZone ?? "—")</strong>
+        </span>
+    </div>
+    <partial name="_WeekendSettingsTableList" />
+    <partial name="_WeekendSettingsEdit" />
+    <partial name="_ConfirmDelete" />
+</div>
+
+@section Scripts{
+    <script src="~/js/pages/adminsettings/organizationsettings/weekendsettings.js"></script>
+}

@@ -1,0 +1,242 @@
+﻿@{
+    var mainTab = "GeneralSetting";
+    var subTab = "LocalizationSettings";
+}
+
+<partial name="~/Views/Shared/AdminsettingsNavs/CompanySettingsNavs/_MainSettingsTabPartial.cshtml" model="mainTab" />
+<partial name="~/Views/Shared/AdminsettingsNavs/CompanySettingsNavs/_NavGeneralSettingsPartial.cshtml" model="subTab" />
+
+<div class="col-xl-12 mt-3">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="border-bottom mb-3 pb-3">
+                <h4>Localization</h4>
+            </div>
+            <form id="localizationForm" asp-controller="LocalizationSettings" asp-action="Create" method="post">
+                <div class="mb-3">
+                    <div class="row">
+                        <!-- Organization Dropdown -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="organization">Organization</label>
+                                <select class="form-select choiceDD" id="organizationid"  name="OrganizationID">
+                                   
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Language Dropdown -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="languageId">Language</label>
+                                <select class="form-select choiceDD" id="languageId" name="LanguageID">
+                                    <option >Select</option>
+                                   
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Timezone Dropdown -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="timezoneId">Timezone</label>
+                                <select class="form-select choiceDD" id="timezoneId" name="TimezoneID">
+                                    <option>Select</option>
+                                   
+
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <!-- Date Format Dropdown -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="dateFormatId">Date Format</label>
+                                <select class="form-select choiceDD" id="dateFormatId" name="DateFormatID">
+                                    <option>Select</option>
+                                   
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Time Format Dropdown -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="timeFormatId">Time Format</label>
+                                <select class="form-select choiceDD" id="timeFormatId" name="TimeFormatID">
+                                    <option>Select</option>
+                                    
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Currency Dropdown -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="currencyId">Currency</label>
+                                <select class="form-select choiceDD" id="currencyId" name="CurrencyID">
+                                   
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Currency Symbol Dropdown -->
+                        @* <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="currencySymbolId">Currency Symbol</label>
+                                <select class="form-select" id="currencySymbolId" name="CurrencySymbol">
+                                    <option>Select</option>
+                                    <option value="$">$</option>
+                                    <option value="€">€</option>
+                                    <option value="৳">৳</option>
+                                </select>
+                            </div>
+                        </div> *@
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex align-items-center justify-content-end">
+                    <button type="reset" class="btn btn-outline-secondary me-2">Reset</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <partial name="_localizationListTable" />
+    <partial name="_localizationEdit" />
+    <partial name="_ConfirmDelete" />
+</div>
+
+
+
+@* <div class="col-xl-12 mt-3">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="border-bottom mb-3 pb-3">
+                <h4>Localization</h4>
+            </div>
+            <form >
+                <div class="mb-3">
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="organizerSingleCompany" data-bs-toggle="tooltip" title="Select the organization this localization applies to.">
+                                    Organization
+                                </label>
+
+
+                                <select class="form-select choiceDD" id="organization">
+                                    <option value="1">CSL</option>
+                                    <option value="2">GCTL</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="Language" data-bs-toggle="tooltip" title="Choose the preferred language for the system interface.">
+                                    Language
+                                </label>
+
+                                <select class="form-select choiceDD" id="languageId" aria-label="Default select example">
+                                    <option>Select</option>
+                                    <option>English</option>
+                                    <option>Bangla</option>
+                                    <option>French</option>
+                                    <option>Spanish</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="Timezone" data-bs-toggle="tooltip" title="Set the timezone for accurate time tracking and scheduling.">
+                                    Timezone
+                                </label>
+
+                                <select class="form-select choiceDD" id="timezoneId" aria-label="Default select example">
+                                    <option>Select</option>
+                                    <option>(UTC +5:30)</option>
+                                    <option>(UTC+11:00) INR</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="DateFormat" data-bs-toggle="tooltip" title="Select how dates should be displayed across the system.">
+                                    Date Format
+                                </label>
+
+                                <select class="form-select choiceDD" id="DateFormatId" aria-label="Default select example">
+                                    <option>Select</option>
+                                    <option>YYYY-MM-DD</option>
+                                    <option>MM/DD/YYYY</option>
+                                    <option>DD/MM/YYYY</option>
+                                    <option>YYYY/MM/DD</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="TimeFormat" data-bs-toggle="tooltip" title="Choose between 12-hour or 24-hour time display.">
+                                    Time Format
+                                </label>
+                                <select class="form-select choiceDD" id="TimeFormatId" aria-label="Default select example">
+                                    <option>Select</option>
+                                    <option>12 Hours</option>
+                                    <option>24 Hours</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="Currency" data-bs-toggle="tooltip" title="Select the currency used for financial transactions.">
+                                    Currency
+                                </label>
+
+                                <select class="form-select choiceDD" id="CurrencyId" aria-label="Default select example">
+                                    <option>Select</option>
+                                    <option>USD</option>
+                                    <option>EURO</option>
+                                    <option>BDT</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="CurrencySymbol" data-bs-toggle="tooltip" title="Pick the symbol that represents your selected currency.">
+                                    Currency Symbol
+                                </label>
+                                <select class="form-select" id="currencySymbolId" aria-label="Default select example">
+                                    <option>Select</option>
+                                    <option>$</option>
+                                    <option>€</option>
+                                    <option>৳</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-end">
+                    <button type="button" class="btn btn-light border me-3">Reset</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <partial name="_localizationListTable" />
+</div> *@
+
+@section Scripts {
+    <script src="~/js/pages/adminsettings/generalsettings/localizationsettings.js"></script>
+}

@@ -1,0 +1,11 @@
+﻿
+
+
+services.AddScoped<IBillService, BillService>();
+
+
+ALTER TABLE [dbo].[CustomerWiseCostingDetailsEntry]
+ADD CONSTRAINT PK_CustomerWiseCostingDetailsEntry PRIMARY KEY (TC);
+
+ALTER TABLE [dbo].[CustomerWiseCostingEntry]
+ADD CONSTRAINT PK_CustomerWiseCostingEntry PRIMARY KEY (TC);

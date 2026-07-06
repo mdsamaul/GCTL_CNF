@@ -1,0 +1,71 @@
+## =========================
+## .NET / ASP.NET Core
+## =========================
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio
+.vs/
+*.user
+*.userosscache
+*.suo
+*.cache
+*.log
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/
+
+# Build artifacts
+*.dll
+*.pdb
+*.exe
+*.app
+*.deps.json
+*.runtimeconfig.json
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+
+# Publish output
+publish/
+**/Properties/launchSettings.json
+
+# Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# SourceLink
+*.sourcelink.json
+
+# Logs
+logs/
+*.log
+
+# Backup & temp files
+*.bak
+*.tmp
+*.swp
+
+# EF Core
+Migrations/*.Designer.cs
+Migrations/*.resx
+
+# User-specific
+appsettings.Development.json
+appsettings.Local.json

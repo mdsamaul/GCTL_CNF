@@ -1,0 +1,90 @@
+﻿@{
+    var mainTab = "CompanySetting";
+    var subTab = "DepartmentSettings";
+}
+
+<partial name="~/Views/Shared/AdminsettingsNavs/CompanySettingsNavs/_MainSettingsTabPartial.cshtml" model="mainTab" />
+<partial name="~/Views/Shared/AdminsettingsNavs/CompanySettingsNavs/_NavCompanySettingsPartial.cshtml" model="subTab" />
+
+
+<div class="col-xl-12 mt-3">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="border-bottom d-flex align-items-center justify-content-between pb-3 mb-3">
+                <h4>Department Settings</h4>
+
+            </div>
+
+
+            <form id="departmentSettingsForm" asp-controller="DepartmentSettings" asp-action="Create" method="post">
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div>
+                                <h6 class="mb-3">Basic Information</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label" for="OrganizationID">Organization Name</label>
+                                <select id="OrganizationID" name="OrganizationID" class="form-select choiceDD">
+                                    <option value="">-- Select Organization --</option>
+                                    @if (ViewBag.Organizations != null)
+                                    {
+                                        foreach (var org in ViewBag.Organizations)
+                                        {
+                                            <option value="@org.Value">@org.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label" for="DepartmentName">Department Name</label>
+                                <input class="form-control" id="DepartmentName" type="text" name="DepartmentName" placeholder="Department Name" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label" for="DepartmentHeadEmpID">Department Head</label>
+                                <select class="form-select choiceDD" id="DepartmentHeadEmpID" name="DepartmentHeadEmpID">
+                                    <option value="">Select Department Head</option>
+                                    @if (ViewBag.EmployeeNameWithCode != null)
+                                    {
+                                        foreach (var org in ViewBag.EmployeeNameWithCode)
+                                        {
+                                            <option value="@org.Value">@org.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+
+
+                <div class="d-flex align-items-center justify-content-end">
+                    <button type="reset" class="btn btn-outline-secondary border me-3">Reset</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<partial name="_DepartmentTableList" />
+<partial name="_ConfirmDelete" />
+
+@section Scripts {
+    <script src="~/js/pages/adminsettings/organizationsettings/departmentsetting.js"></script>
+
+}

@@ -1,0 +1,498 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using DocumentFormat.OpenXml.Spreadsheet;
+using GCTL.Core.Repository;
+using GCTL.Core.ViewModels;
+using GCTL.Core.ViewModels.ClearAndF.Update;
+using GCTL.Data.Models;
+using Microsoft.EntityFrameworkCore;
+using static GCTL.Service.ClearAndF.Update.JobService;
+
+
+namespace GCTL.Service.ClearAndF.Update
+{
+    public class JobService : IJobService
+    {
+        private readonly IGenericRepository<Sep_Documentation> _sepDocumentionRepository;
+        private readonly IGenericRepository<CF_DailyJobUpdateEntry> _jobUpdateRepository;
+        private readonly IGenericRepository<CF_Def_ExpenseType> _shipmentModeRepository;
+        private readonly IGenericRepository<Sales_Customer> _customerRepository;
+
+
+
+        #region static
+
+        private static readonly List<JobDto> _staticJobs = new()
+        {
+            new JobDto { Id = 1, JobNo = "JOB-001", ShipmentMode = "Sea", JobDate = "2025-12-01", CustomerName = "ABC Corp", DocReceivedDate = "2025-12-05" },
+            new JobDto { Id = 1, JobNo = "JOB-002", ShipmentMode = "Air", JobDate = "2025-12-10", CustomerName = "XYZ Ltd", DocReceivedDate = "2025-12-12" },
+            new JobDto { Id = 1, JobNo = "JOB-003", ShipmentMode = "Sea", JobDate = "2025-12-15", CustomerName = "ABC Corp", DocReceivedDate = null },
+            new JobDto { Id = 1,  JobNo = "JOB-004", ShipmentMode = "Land", JobDate = "2025-12-20", CustomerName = "Global Traders", DocReceivedDate = "2025-12-21" },
+            new JobDto {Id = 1,  JobNo = "JOB-005", ShipmentMode = "Air", JobDate = "2025-12-22", CustomerName = "XYZ Ltd", DocReceivedDate = "2025-12-23" },
+            // Add more if you want to test pagination
+            new JobDto {Id = 1,  JobNo = "JOB-006", ShipmentMode = "Sea", JobDate = "2025-12-24", CustomerName = "ABC Corp", DocReceivedDate = "2025-12-25" },
+            new JobDto {Id = 1,  JobNo = "JOB-007", ShipmentMode = "Air", JobDate = "2025-12-25", CustomerName = "New Client", DocReceivedDate = null },
+            new JobDto {Id = 1,  JobNo = "JOB-001", ShipmentMode = "Sea", JobDate = "2025-12-01", CustomerName = "ABC Corp", DocReceivedDate = "2025-12-05" },
+            new JobDto {Id = 1,  JobNo = "JOB-002", ShipmentMode = "Air", JobDate = "2025-12-10", CustomerName = "XYZ Ltd", DocReceivedDate = "2025-12-12" },
+            new JobDto {Id = 1,  JobNo = "JOB-003", ShipmentMode = "Sea", JobDate = "2025-12-15", CustomerName = "ABC Corp", DocReceivedDate = null },
+            new JobDto {Id = 1,  JobNo = "JOB-004", ShipmentMode = "Land", JobDate = "2025-12-20", CustomerName = "Global Traders", DocReceivedDate = "2025-12-21" },
+            new JobDto {Id = 1,  JobNo = "JOB-005", ShipmentMode = "Air", JobDate = "2025-12-22", CustomerName = "XYZ Ltd", DocReceivedDate = "2025-12-23" },
+            // Add more if you want to test pagination
+            new JobDto {Id = 1,  JobNo = "JOB-006", ShipmentMode = "Sea", JobDate = "2025-12-24", CustomerName = "ABC Corp", DocReceivedDate = "2025-12-25" },
+            new JobDto {Id = 1,  JobNo = "JOB-007", ShipmentMode = "Air", JobDate = "2025-12-25", CustomerName = "New Client", DocReceivedDate = null }
+        };
+
+        private static readonly List<JobDetailDto> staticDetails = new List<JobDetailDto>
+            {
+                new JobDetailDto
+                {
+                    Id = 1,
+                    JobNo = "JOB-001",
+                    ShipmentMode = "Sea",
+                    //ShipmentModeId = 2,
+                    //IsCustomJobNo = false,
+                    JobDate = "2025-12-01",
+                   // CustomerId = 101,
+                    CustomerName = "ABC Corp",
+                    CustomerDeliveryAddress = "123 Main St, Dhaka",
+                   // PortId = 5,
+                    DocsReceivedDate = "2025-12-05",
+                    LcExpNo = "LC-2025-001",
+                    LcValue = 500000,
+                    IpEpNo = "IP-2025-001",
+                    IpDate = "2025-11-20",
+                   // ImporterId = 201,
+                    InvoiceNo = "INV-001",
+                    InvoiceDate = "2025-12-01",
+                    BlNo = "BL-SEA-001",
+                    BeNo = "BL-SEA-001",
+                    BeDate = "2025-12-10",
+                    BlDate = "2025-12-10",
+                    ContainerNo = "CONT-12345",
+                    ContainerSize = "40FT",
+                    LcaNo = "40FT",
+                    DischargeDate = "2025-12-15",
+                    MaterialDescription = "Cotton Fabric",
+                    Quantity = 1000,
+                   // QuantityUnitId = 3, // e.g., Rolls
+                    Weight = 25000,
+                   // WeightUnitId = 1, // KG
+                   // ForwarderId = 301,
+                    VesselRottNo = "VSL-ROT-2025-12",
+                    Remarks = "Urgent delivery required",
+                    DocReceivedDate = "2025-12-01",
+
+                },
+
+            };
+
+
+        private static readonly List<JobStatusDto> _staticStatuses = new()
+    {
+        new JobStatusDto { Id = 1, Status = "Success", JobNo = "JOB-001", ShipmentStatus = "Documents Received", DateTime = "2025-12-05 10:30" },
+        new JobStatusDto { Id = 2, Status = "Warning", JobNo = "JOB-001", ShipmentStatus = "In Customs", DateTime = "2025-12-10 14:15" },
+        new JobStatusDto { Id = 3, Status = "Success", JobNo = "JOB-002", ShipmentStatus = "BL Received", DateTime = "2025-12-12 09:00" },
+        new JobStatusDto { Id = 4, Status = "Danger", JobNo = "JOB-001", ShipmentStatus = "Customs Hold", DateTime = "2025-12-15 11:45" },
+        new JobStatusDto { Id = 5, Status = "Success", JobNo = "JOB-003", ShipmentStatus = "Discharged", DateTime = "2025-12-18 16:20" },
+        new JobStatusDto { Id = 6, Status = "Success", JobNo = "JOB-002", ShipmentStatus = "Delivered", DateTime = "2025-12-20 13:10" },
+        new JobStatusDto { Id = 7, Status = "Warning", JobNo = "JOB-004", ShipmentStatus = "Pending Payment", DateTime = "2025-12-22 08:55" },
+        // Add more rows as needed
+    };
+
+        #endregion
+
+        public JobService(IGenericRepository<Sep_Documentation> sepDocumentionRepository, IGenericRepository<CF_Def_ExpenseType> shipmentModeRepository, IGenericRepository<Sales_Customer> customerRepository, IGenericRepository<CF_DailyJobUpdateEntry> jobUpdateRepository)
+        {
+            _sepDocumentionRepository = sepDocumentionRepository;
+            _shipmentModeRepository = shipmentModeRepository;
+            _customerRepository = customerRepository;
+            _jobUpdateRepository = jobUpdateRepository;
+        }
+
+
+
+
+
+        public async Task<SepPagedResult<JobDto>> GetJobsPagedAsync(int page, int pageSize, string? customerName, string? shipmentMode, string? dateFrom, string? dateTo, string? search)
+        {
+
+            try
+            {
+                var query =  _sepDocumentionRepository.All().Select(h => new JobDto
+                {
+                    Id = Convert.ToInt16(h.TC),
+                    JobNo = h.JobNo,
+                    ShipmentMode = _shipmentModeRepository.All().Where(e => e.ExpenseTypeID == h.ExpenseTypeID).Select(e => e.ExpenseType).FirstOrDefault() ?? "",
+                    JobDate = h.Date.Value.ToString("dd/MM/yyyy"),
+                    CustomerName = _customerRepository.All().Where(e => e.CustomerID == h.CustomerID).Select(e => e.CustomerName).FirstOrDefault() ?? "",
+                    DocReceivedDate = h.DocReceivedDate.Value.ToString("dd/MM/yyyy")
+                }).AsNoTracking();
+
+
+                var totalCount = query.Count();
+
+
+
+                // Apply filters
+                if (!string.IsNullOrWhiteSpace(customerName))
+                    query = query.Where(j => j.CustomerName == customerName);
+
+                if (!string.IsNullOrWhiteSpace(shipmentMode))
+                    query = query.Where(j => j.ShipmentMode == shipmentMode);
+
+                if (DateTime.TryParse(dateFrom, out var fromDate))
+                    query = query.Where(j => DateTime.Parse(j.JobDate) >= fromDate);
+
+                if (DateTime.TryParse(dateTo, out var toDate))
+                    query = query.Where(j => DateTime.Parse(j.JobDate) <= toDate.AddDays(1).AddTicks(-1)); // include full day
+
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    search = search.ToLower();
+                    query = query.Where(j =>
+                        j.JobNo.ToLower().Contains(search) ||
+                        j.CustomerName.ToLower().Contains(search) ||
+                        j.ShipmentMode.ToLower().Contains(search));
+                }
+
+                var filteredCount = query.Count();
+               
+
+                var data = query
+                    .OrderBy(j => j.JobNo) // Important: consistent ordering for stable pagination
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                return  new SepPagedResult<JobDto>
+                {
+                    Data = data,
+                    TotalRecords = totalCount,
+                    FilteredRecords = filteredCount
+                };
+            }
+            catch (Exception)
+            {
+
+               return new SepPagedResult<JobDto>
+               {
+                   Data = new List<JobDto>(),
+                   TotalRecords = 0,
+                   FilteredRecords = 0
+               };
+            }
+
+            
+        }
+
+
+        public async Task<JobDetailDto> GetJobDetailAsync(int id)
+        {
+
+           
+
+            var query1 = await _sepDocumentionRepository.All()
+             .Select(h => new JobDetailDto
+             {
+                 Id = Convert.ToInt16(h.TC),
+                 JobNo = h.JobNo,
+                 ShipmentMode = h.ExpenseTypeID,          // h থেকে bind করুন
+                 ShipmentModeId = h.ExpenseTypeID,
+                 IsCustomJobNo = h.IsCustomJobNo,
+                 JobDate = h.Date.Value.ToShortDateString(),
+                 CustomerId = h.CustomerID,
+                 CustomerName = h.CustomerID,
+                 CustomerDeliveryAddress = h.DeliveryLocationCode, //TODO: DElivery add
+                 PortId = h.PortId,
+                 DocsReceivedDate = h.DocReceivedDate.Value.ToShortDateString(),
+                 LcExpNo = h.ExpNo,
+                 LcValue = h.LCValue,
+                 IpEpNo = h.IPNo,
+                 IpDate = h.IPDate.Value.ToString(),
+                 ImporterId = h.ImporterID,
+                 InvoiceNo = h.InvoiceNo,
+                 InvoiceDate = h.InvoiceDate.Value.ToString(),
+                 BlNo = h.BENo,
+                 BeNo = h.BENo,
+                 BeDate = h.BEDate.Value.ToString(),
+                 BlDate = h.BLDate.Value.ToString(),
+                 ContainerNo = h.ContainerNo,
+                 ContainerSize = h.ContainerSize,
+                 LcaNo = h.LCANo,
+                 DischargeDate = h.Dischargedate.Value.ToString(),
+                 MaterialDescription = h.MaterialDescription,
+                 Quantity = h.Quntity1,
+                 QuantityUnitId = h.Unit1,
+                 Weight = h.Quntity2,
+                 WeightUnitId = h.Unit2,
+                 ForwarderId = h.NameOfFreightForwarder,
+                 VesselRottNo = h.Vessel_RottNo,
+                 Remarks = h.Remarks,
+                 DocReceivedDate = h.DocReceivedDate.Value.ToString(),
+                 CreatedAt = h.LDate,
+                 UpdatedAt = h.LDate,
+             })
+             .FirstOrDefaultAsync(j => j.Id == id);
+
+           
+            if (query1 == null)
+                throw new Exception("Job not found");
+
+            return query1;
+        }
+
+       
+        public async Task<SepPagedResult<JobStatusDto>> GetJobStatusesPagedAsync(int page, int pageSize, string? search)
+        {
+            try
+            {
+                // var query = _staticStatuses.AsQueryable();
+                var query = _jobUpdateRepository.All().Select(e => new JobStatusDto
+                {
+                    Id = e.TC,
+                    JobUpdateCode = e.DailyJobUpdateEntryID,
+                    Status = "Success",
+                    JobNo = e.JobNo,
+                    ShipmentStatus = e.UpdateStatus,
+                    DateTime = e.UpdateDateTime.Value.ToString("dd/MM/yyyy HH:mm:ss"),
+
+                }).AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    search = search.ToLower();
+                    query = query.Where(s =>
+                        s.JobNo.ToLower().Contains(search) ||
+                        s.ShipmentStatus.ToLower().Contains(search));
+                }
+
+
+                var totalCount = query.Count(); // _staticStatuses.Count;
+
+                var data = query
+                    .OrderByDescending(s => s.Id) // Latest first
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                var filteredCount = data.Count();
+
+
+                return new SepPagedResult<JobStatusDto>
+                {
+                    Data = data,
+                    TotalRecords = totalCount,
+                    FilteredRecords = totalCount
+                };
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            
+           
+        }
+
+        public async Task<CommonReturnViewModel> UpdateJobs(ShipmentUpdateViewModel model, int? company)
+        {
+            await _sepDocumentionRepository.BeginTransactionAsync();
+
+            try
+            {
+                var doucument = await _sepDocumentionRepository.All().FirstOrDefaultAsync(e => e.JobNo == model.JobNo);
+
+                if (doucument == null)
+                {
+                    await _sepDocumentionRepository.RollbackTransactionAsync();
+                    return new CommonReturnViewModel()
+                    {
+                        Success = false,
+                        Message = "job Not found"
+                    };
+                }
+
+                doucument.ETA = model.ETADeliveryDate;
+                doucument.ATA = model.ActualDeliveryDate; //TODO
+                doucument.Un_StuffingLocationDate = model.UnstuffingDate; 
+                doucument.ETDDate = model.ETDDate; 
+                doucument.PlaceOfLoadingID = model.PlaceOfLoadingID; 
+                doucument.ShedYardID = model.ShedYardID; 
+                doucument.FreightCharge = model.FreightChargeID; 
+
+                await _sepDocumentionRepository.UpdateAsync(doucument);
+
+                if (model.AutoId > 0)
+                {
+                    var prevData = await _jobUpdateRepository.All().FirstOrDefaultAsync(e => e.TC == model.AutoId);
+
+                    if (prevData != null)
+                    {
+                        prevData.UpdateStatus = model.ShipmentStatus;
+
+                        prevData.UpdateDateTime = DateTime.Now;
+                        prevData.ModifyDate = DateTime.Now;
+
+                        prevData.LIP = model.LIP;
+                        prevData.LMAC = model.LMAC;
+                        prevData.EmployeeID = model.CreatedBy.ToString();
+                        prevData.LUser = model.CreatedBy.ToString();
+
+                        await _jobUpdateRepository.UpdateAsync(prevData);
+                    }
+
+                   
+                        
+                        
+                }
+                else
+                {
+                    var updateDoc = new CF_DailyJobUpdateEntry()
+                    {
+                        JobNo = model.JobNo,
+                        DailyJobUpdateEntryID = await GetLastJobEntryCode(),
+                        UpdateStatus = model.ShipmentStatus,
+
+                        UpdateDateTime = DateTime.Now,
+                        ModifyDate = DateTime.Now,
+
+                        LIP = model.LIP,
+                        LMAC = model.LMAC,
+                        EmployeeID = model.CreatedBy.ToString(),
+                        LUser = model.CreatedBy.ToString(),
+                        CompanyCode = company.ToString()
+
+
+                    };
+
+                    await _jobUpdateRepository.AddAsync(updateDoc);
+                }
+
+               
+
+                await _sepDocumentionRepository.CommitTransactionAsync();
+
+                return new CommonReturnViewModel()
+                {
+                    Success = true,
+                    Message = "Update  Success",
+                    Data = doucument.JobNo
+                };
+
+            }
+            catch (Exception)
+            {
+                await _sepDocumentionRepository.RollbackTransactionAsync();
+                return new CommonReturnViewModel()
+                {
+                    Success = false,
+                    Message = "Something went wrong"
+                };
+            }
+
+            
+        }
+
+        private async Task<string> GetLastJobEntryCode()
+        {
+            var lastCode = await _jobUpdateRepository.All()
+                .Select(e => new { e.TC, e.DailyJobUpdateEntryID })
+                .OrderByDescending(e => e.TC)
+                .FirstOrDefaultAsync();
+
+            if (lastCode == null)
+            {
+                // প্রথম এন্ট্রি হলে শুরু হবে 00000001 থেকে
+                return "00000001";
+            }
+
+            // ধরে নিচ্ছি DailyJobUpdateEntryID হচ্ছে string ফরম্যাটে কোড (যেমন "00000001")
+            int numericCode = int.Parse(lastCode.DailyJobUpdateEntryID);
+            numericCode++;
+
+            // 8 digit format এ আবার রিটার্ন করা হবে
+            return numericCode.ToString("D8");
+        }
+
+        public async Task<JobDetailDto> GetJobTopDetailsAsync(string jobNo)
+        {
+            var query1 = await _sepDocumentionRepository.All()
+            .Select(h => new JobDetailDto
+            {
+                Id = Convert.ToInt16(h.TC),
+                JobNo = h.JobNo,
+                ShipmentMode = h.ExpenseTypeID,          // h থেকে bind করুন
+                ShipmentModeId = h.ExpenseTypeID,
+                IsCustomJobNo = h.IsCustomJobNo,
+                JobDate = h.Date.Value.ToShortDateString(),
+                CustomerId = h.CustomerID,
+                CustomerName = h.CustomerID,
+                CustomerDeliveryAddress = h.DeliveryLocationCode, //TODO: DElivery add
+                PortId = h.PortId,
+                DocsReceivedDate = h.DocReceivedDate.Value.ToShortDateString(),
+                LcExpNo = h.ExpNo,
+                LcValue = h.LCValue,
+                IpEpNo = h.IPNo,
+                IpDate = h.IPDate.Value.ToString(),
+                ImporterId = h.ImporterID,
+                InvoiceNo = h.InvoiceNo,
+                InvoiceDate = h.InvoiceDate.Value.ToString(),
+                BlNo = h.BENo,
+                BeNo = h.BENo,
+                BeDate = h.BEDate.Value.ToString(),
+                BlDate = h.BLDate.Value.ToString(),
+                ContainerNo = h.ContainerNo,
+                ContainerSize = h.ContainerSize,
+                LcaNo = h.LCANo,
+                DischargeDate = h.Dischargedate.Value.ToString(),
+                MaterialDescription = h.MaterialDescription,
+                Quantity = h.Quntity1,
+                QuantityUnitId = h.Unit1,
+                Weight = h.Quntity2,
+                WeightUnitId = h.Unit2,
+                ForwarderId = h.NameOfFreightForwarder,
+                VesselRottNo = h.Vessel_RottNo,
+                Remarks = h.Remarks,
+                DocReceivedDate = h.DocReceivedDate.Value.ToString(),
+            })
+            .FirstOrDefaultAsync(j => j.JobNo == jobNo);
+
+
+            if (query1 == null)
+                throw new Exception("Job not found");
+
+            return query1;
+        }
+
+        public async Task<ShipmentUpdateViewModel> GetJobBottomDetailsAsync(string jobNo, decimal id)
+        {
+            var status = await _jobUpdateRepository.All().Where(e => e.TC == id).Select(e => new { e.UpdateStatus , e.TC}).FirstOrDefaultAsync();
+
+            var data = await _sepDocumentionRepository.All().Where(e => e.JobNo == jobNo).Select(model => new ShipmentUpdateViewModel
+            {
+                ETADeliveryDate = model.ETA,
+                ActualDeliveryDate = model.ATA, //TODO
+                UnstuffingDate = model.Un_StuffingLocationDate,
+                ETDDate = model.ETDDate,
+                PlaceOfLoadingID = model.PlaceOfLoadingID,
+                ShedYardID = model.ShedYardID,
+                FreightChargeID = model.FreightCharge,
+                ShipmentStatus = status != null ? status.UpdateStatus : "",
+                AutoId = status != null ? status.TC : 0m
+            }).FirstOrDefaultAsync();
+
+            return data ?? new ShipmentUpdateViewModel();
+          
+        }
+    }
+}
+

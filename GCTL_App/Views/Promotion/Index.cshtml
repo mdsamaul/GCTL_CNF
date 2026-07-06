@@ -1,0 +1,39 @@
+﻿
+<div class=" ps-3 d-md-flex d-block align-items-center justify-content-between page-breadcrumb">
+    <div class="my-auto mb-2">
+        <h2 class="mb-0">@Html.SmartLocalize("Employee Promotion/Demotion")</h2>
+        <nav>
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="#"><i class="ti ti-smart-home"></i></a>
+                </li>
+                <li class="breadcrumb-item">@Html.SmartLocalize("Employee")</li>
+                <li class="breadcrumb-item active" aria-current="page">@Html.SmartLocalize("Status")</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+
+<div class="bg-light">
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-12">
+
+                @await Html.PartialAsync("_PromotionForm")
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/pages/Employees/EmployeeStatus/Promotion/PromotionForm.js"></script>
+    
+
+}
