@@ -204,6 +204,15 @@
     <script src="~/js/layout/select2/js/custom-select-2.js"></script>
     <script src="~/lib/custom-datepicker/custom-datepicker.js"></script>
     <script src="~/lib/custom-inline-timepicker/custom-inline-timepicker.js"></script>
+    <script src="~/js/pages/getholidayslist/getholidayslist.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        $(function () {
+        customHolidayService.init({
+        year: new Date().getFullYear()
+        });
+        });
+    </script>
 </body>
 </html>

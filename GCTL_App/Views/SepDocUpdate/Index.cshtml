@@ -60,6 +60,9 @@
         margin-bottom: 0 !important;
     }
 
+    
+    
+
 </style>
 
 
@@ -122,12 +125,13 @@
                                     </div>
 
                                     <!-- Filter by Date Range -->
+                                    
                                     <div class="me-3">
-                                        <div class="input-group">
+                                        <div class="input-group input-group-sm custom-date-group">
                                             <span class="input-group-text">From</span>
-                                            <input type="date" class="form-control form-control-sm custom-datepicker caiCon" id="dateFrom">
+                                            <input type="date" class="form-control custom-datepicker caiCon" id="dateFrom">
                                             <span class="input-group-text">To</span>
-                                            <input type="date" class="form-control form-control-sm custom-datepicker caiCon" id="dateTo">
+                                            <input type="date" class="form-control custom-datepicker caiCon" id="dateTo">
                                         </div>
                                     </div>
                                 </div>
@@ -137,11 +141,13 @@
                                     <div class="me-3">
                                         <input class="form-control form-control-sm" id="searchInput" type="text" placeholder="Search">
                                     </div>
-                                    <div class="dropdown me-3">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
+
+                                   
+                                    <div class="me-3">
+                                        <div class="input-group input-group-sm">
+                                          
                                                 <span class="input-group-text">Showing</span>
-                                            </div>
+                                          
                                             <select class="form-select form-select-sm" id="pageSizeSelect">
                                                 <option value="5">5</option>
                                                 <option value="10">10</option>
@@ -472,7 +478,7 @@
                         <!-- Unstuffing Date -->
                         <div class="col-lg-4 col-md-6">
                             <label class="form-label">Unstuffing Date</label>
-                            <input asp-for="UnstuffingDate" type="date" class="form-control form-control-sm custom-datepicker caiCon" id="unstuffingDate" />
+                            <input asp-for="UnstuffingDate" type="text" class="form-control form-control-sm custom-datepicker caiCon" id="unstuffingDate" />
                             <span asp-validation-for="UnstuffingDate" class="text-danger"></span>
                         </div>
 
@@ -488,7 +494,7 @@
                         <!-- ETD Date -->
                         <div class="col-lg-4 col-md-6">
                             <label class="form-label">ETD Date</label>
-                            <input asp-for="ETDDate" type="date" class="form-control form-control-sm custom-datepicker caiCon" id="etdDate" />
+                            <input asp-for="ETDDate" type="text" class="form-control form-control-sm custom-holiday-tooltip caiCon" id="etdDate" />
                             <span asp-validation-for="ETDDate" class="text-danger"></span>
                         </div>
 
@@ -520,39 +526,65 @@
 
                         <div class="col-lg-4 col-md-6"></div>
 
-                        <!-- Creation Date (Read-only) -->
+                        <!-- Creation Date -->
                         <div class="col-lg-4 col-md-6 d-flex align-items-center">
-                            <label class="form-label col-3">Creation Date</label>
-                            <input type="date" class="border-0 form-control-plaintext" readonly id="creationDate" />
+                            <label class="form-label text-nowrap ">Creation Date:</label>
+                            <span class="form-control-plaintext flex-grow-1 ps-2 fs-9" id="creationDate"></span>
                         </div>
 
                         <div class="col-lg-4 col-md-6"></div>
 
-                        <!-- Updated Date (Read-only) -->
+                        <!-- Updated Date -->
                         <div class="col-lg-4 col-md-6 d-flex align-items-center">
-                            <label class="form-label col-3">Updated Date</label>
-                            <input type="date" class="border-0 form-control-plaintext" readonly id="updatedDate" />
+                            <label class="form-label  text-nowrap mb-0">Updated Date:</label>
+                            <span class="form-control-plaintext flex-grow-1 ps-2 fs-9" id="updatedDate"></span>
                         </div>
                     </div>
                 </form>
             </div>
 
+            <hr class="border border-white border-1 opacity-100 mx-auto">
 
-            <div class="px-4 pt-1 px-lg-6 bg-body-emphasis rounded mt-7">
+
+            <div class="px-4 pt-1 px-lg-6 bg-body-emphasis rounded">
                 <div class="mb-9">
                     <div id="jobStatusSummary">
                         <!-- Search and Page Size -->
-                        <div class="row  justify-content-between align-items-end mb-4">
+                        <div class="row  justify-content-between align-items-end my-3">
                             <div class="col-12 col-sm-auto">
                                 <!-- Empty left side for alignment -->
                             </div>
-                            <div class="col-12 col-sm-auto">
+                            <div class="col-12 col-sm-auto pe-0">
                                 <div class="d-flex align-items-center">
+                                    <div class="col-12 col-sm-auto">
+                                        <div class="d-flex align-items-center">
+                                            <!-- Filter by Customer Name (dropdown or select2 if you have many customers) -->
+                                            <div class="dropdown me-3">
+                                                <select class="form-select form-select-sm custom-select-single" data-placeholder="Select Customer" id="customerLoadGridFilter" asp-items="ViewBag.CustomerName as SelectList">
+                                                    <option value="">All Customers</option>
+                                                    <!-- Options will be populated dynamically or via server -->
+                                                </select>
+                                            </div>
+
+                                            <!-- Filter by Date Range -->
+                                            <div class="me-3">
+                                                <div class="input-group input-group-sm custom-date-group">
+                                                    <span class="input-group-text">From</span>
+                                                    <input type="date" class="form-control custom-datepicker caiCon" id="dateLoadGridFrom">
+                                                    <span class="input-group-text">To</span>
+                                                    <input type="date" class="form-control custom-datepicker caiCon" id="dateLoadGridTo">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
                                     <div class="me-3">
                                         <input class="form-control form-control-sm" id="statusSearchInput" type="text" placeholder="Search">
                                     </div>
                                     <div class="me-3">
-                                        <div class="input-group">
+                                        <div class="input-group input-group-sm">
                                             <span class="input-group-text">Showing</span>
                                             <select class="form-select form-select-sm" id="statusPageSizeSelect">
                                                 <option value="10">10</option>
@@ -568,7 +600,7 @@
 
                         <!-- Table -->
                         <div class="table-responsive ms-n1 ps-1 scrollbar">
-                            <table class="table fs-9 mb-0 border-top border-translucent dyn-tableDrag" id="JobStatusTable">
+                            <table class="table table-sm fs-9 mb-0 border-top border-translucent dyn-tableDrag" id="JobStatusTable">
                                 <thead>
                                     <tr>
                                         <th class="sort white-space-nowrap align-middle ps-0" scope="col" data-sort="Status">Status</th>

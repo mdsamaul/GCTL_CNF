@@ -253,7 +253,7 @@ namespace GCTL_App.Controllers
                     currentRole = (from user in _Db.Users
                                    join userRole in _Db.UserRoles on user.Id equals userRole.UserId
                                    join role in _Db.Roles on userRole.RoleId equals role.Id
-                                   where user.EmployeeId == e.EmployeeID
+                                   where user.Id == e.EmployeeID.ToString()
                                    select role.Name).FirstOrDefault()
                 })               
                 .ToListAsync();
@@ -284,7 +284,7 @@ namespace GCTL_App.Controllers
             if (string.IsNullOrEmpty(userId))
                 return BadRequest("User ID is required.");
 
-            var user = await _Db.Users.FirstOrDefaultAsync(u => u.EmployeeId.ToString() == userId);
+            var user = await _Db.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
             {
@@ -407,7 +407,7 @@ namespace GCTL_App.Controllers
 
                 // Find userId by EmployeeId
                 var userId = await _Db.Users
-                    .Where(u => u.EmployeeId == employeeId)
+                    .Where(u => u.Id == employeeId.ToString())
                     .Select(u => u.Id)
                     .FirstOrDefaultAsync();
 

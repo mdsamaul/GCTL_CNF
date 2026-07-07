@@ -138,11 +138,12 @@ namespace GCTL_App.Controllers.Security
             if (string.IsNullOrWhiteSpace(searchTerm))
                 return new List<ApplicationUser>();
 
-            return await _Db.Users
-                .Where(u => EF.Functions.Like(u.Email, $"%{searchTerm}%") || EF.Functions.Like(u.UserName, $"%{searchTerm}%"))
-                .OrderBy(u => u.UserName)
-                .Take(20)  // limit results for performance
-                .ToListAsync();
+            //return await _Db.Users
+            //    .Where(u => EF.Functions.Like(u.Email, $"%{searchTerm}%") || EF.Functions.Like(u.UserName, $"%{searchTerm}%"))
+            //    .OrderBy(u => u.UserName)
+            //    .Take(20)  // limit results for performance
+            //    .ToListAsync();
+            return null;
         }
 
         public async Task<List<RoleDto>> GetRolesByCompany(int companyId)

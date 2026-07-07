@@ -1,6 +1,7 @@
 ﻿using System.Net.NetworkInformation;
 using System.Security.Claims;
 using GCTL.Data.Models;
+using GCTL.Service.HolidayLIst;
 using GCTL.Service.Language;
 using GCTL.Service.UserProfile;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +19,10 @@ namespace GCTL_App.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private int _smartPageCode = 0;
 
-        
+
         protected string imgSrc => GetBaseUrl() + "/uploads/employee/images/";
         protected string imgSrcThumb => GetBaseUrl() + "/uploads/employee/images/thumbs/";
-       
+
 
 
         protected BaseController(ITranslateService translateService, IUserProfileService userProfileService)
@@ -48,7 +49,7 @@ namespace GCTL_App.Controllers
             string fullName = "Guest User";
             string profilePicturePath = "/img/team/72x72/default.webp";
 
-            if (User?.Identity?.IsAuthenticated == true && _userProfileService!=null)
+            if (User?.Identity?.IsAuthenticated == true && _userProfileService != null)
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (!string.IsNullOrEmpty(userId))
@@ -58,11 +59,11 @@ namespace GCTL_App.Controllers
             }
 
             var url = _httpContextAccessor.HttpContext.Request.Scheme + "://" + _httpContextAccessor.HttpContext.Request.Host + "/uploads/employee/images/";
-            
+
 
 
             ViewData["FullName"] = fullName;
-            ViewData["ProfilePicturePath"] = url  + profilePicturePath;
+            ViewData["ProfilePicturePath"] = url + profilePicturePath;
             ViewData["IsCustomPicture"] = !string.IsNullOrEmpty(profilePicturePath)
                              && !profilePicturePath.EndsWith("default.webp", StringComparison.OrdinalIgnoreCase)
                              && !profilePicturePath.EndsWith("No_image_available.svg.png", StringComparison.OrdinalIgnoreCase);
@@ -119,6 +120,15 @@ namespace GCTL_App.Controllers
             return currentEmployeeId;
         }
 
+        [HttpGet]
+        public async Task<JsonResult> GetHolidays([FromServices] IholidayListService holidayService, int? year = null)
+        {
+            if (holidayService == null)
+                return Json(new List<object>());
+
+            var holidays = await holidayService.GetHolidayListAsync(year ?? DateTime.Now.Year);
+            return Json(holidays);
+        }
     }
 
 
