@@ -321,13 +321,23 @@
             this._triggerChange();
         }
 
+        // _triggerChange() {
+        //     if (typeof this.options.onChange === 'function') {
+        //         this.options.onChange(this.getValue(), this);
+        //     }
+        //     this.$original.trigger('custom:change');
+        // }
         _triggerChange() {
+
+            this.$original.trigger({
+                type: 'change',
+                customDropdown: true
+            });
+
             if (typeof this.options.onChange === 'function') {
                 this.options.onChange(this.getValue(), this);
             }
-            this.$original.trigger('custom:change');
         }
-
         init() {
             if (!this.$original.length) {
                 console.warn('customDropdown: element pawa jayni -> ' + this.originalSelector);

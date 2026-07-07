@@ -78,9 +78,9 @@ namespace GCTL_App.Controllers.ClearAndF.Update
         #endregion
 
         [HttpGet]
-        public async Task<IActionResult> GetJobs(int page = 1, int pageSize = 5, string? customerName = null, string? shipmentMode = null, string? dateFrom = null, string? dateTo = null, string? search = null)
+        public async Task<IActionResult> GetJobs(int page = 1, int pageSize = 5, string? customerId = null, string? shipmentMode = null, DateTime? dateFrom = null, DateTime? dateTo = null, string? search = null)
         {
-            var result = await _jobService.GetJobsPagedAsync(page, pageSize, customerName, shipmentMode, dateFrom, dateTo, search);
+            var result = await _jobService.GetJobsPagedAsync(page, pageSize, customerId, shipmentMode, dateFrom, dateTo, search);
 
             return Json(new
             {
@@ -112,9 +112,15 @@ namespace GCTL_App.Controllers.ClearAndF.Update
 
 
         [HttpGet]
-        public async Task<IActionResult> GetJobStatuses(int page = 1, int pageSize = 10, string? search = null)
+        public async Task<IActionResult> GetJobStatuses(int page = 1,int pageSize = 10,string? search = null,string? customerCode = null,DateTime? fromDate = null,DateTime? toDate = null)
         {
-            var result = await _jobService.GetJobStatusesPagedAsync(page, pageSize, search);
+            var result = await _jobService.GetJobStatusesPagedAsync(
+                page,
+                pageSize,
+                search,
+                customerCode,
+                fromDate,
+                toDate);
 
             return Json(new
             {
