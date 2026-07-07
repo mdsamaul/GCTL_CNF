@@ -7,8 +7,16 @@ namespace GCTL.Service.ClearAndF.Update
     {
         Task<ShipmentUpdateViewModel> GetJobBottomDetailsAsync(string jobNo, decimal id);
         Task<JobDetailDto> GetJobDetailAsync(int id);
-        Task<SepPagedResult<JobDto>> GetJobsPagedAsync(int page, int pageSize, string? customerName, string? shipmentMode, string? dateFrom, string? dateTo, string? search);
-        Task<SepPagedResult<JobStatusDto>> GetJobStatusesPagedAsync(int page, int pageSize, string? search);
+        //Task<SepPagedResult<JobDto>> GetJobsPagedAsync(int page, int pageSize, string? customerId, string? shipmentMode, string? dateFrom, string? dateTo, string? search);
+        Task<SepPagedResult<JobDto>> GetJobsPagedAsync(
+    int page,
+    int pageSize,
+    string? customerId,
+    string? shipmentMode,
+    DateTime? dateFrom,
+    DateTime? dateTo,
+    string? search);
+        Task<SepPagedResult<JobStatusDto>> GetJobStatusesPagedAsync(int page,int pageSize,string? search,string? customerCode,DateTime? fromDate,DateTime? toDate);
         Task<JobDetailDto> GetJobTopDetailsAsync(string jobNo);
         Task<CommonReturnViewModel> UpdateJobs(ShipmentUpdateViewModel model, int? company);
     }
