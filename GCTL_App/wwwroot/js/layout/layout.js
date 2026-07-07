@@ -146,6 +146,23 @@ document.addEventListener("DOMContentLoaded", function () {
 //});
 // #endregion
 
+window.setField = function (selector, value, disabled = false) {
+    var $el = $(selector);
+
+    if ($el.is('input, textarea, select')) {
+        $el.val(value || '');
+
+        if ($el.is('select')) {
+            $el.prop('disabled', !!disabled);
+        } else {
+            $el.prop('readonly', !!disabled);
+            $el.prop('disabled', false);
+        }
+    } else {
+        // span, div etc. - plaintext display
+        $el.text(value || '');
+    }
+};
 
 
 

@@ -60,7 +60,8 @@
         margin-bottom: 0 !important;
     }
 
-    
+   
+}
     
 
 </style>
@@ -78,7 +79,7 @@
                     </h1>
                 </div>
 
-                <div class="d-flex flex-wrap align-items-end pe-1">
+                @* <div class="d-flex flex-wrap align-items-end pe-1">
                     <button type="button" class="btn btn-phoenix-primary" id="saveShipmentBtn">
                         <i class="fas fa-save text-success"></i>
                         <span>Save</span>
@@ -96,6 +97,28 @@
                         <span>Print</span>
                     </button>
                     <button type="button" class="btn btn-phoenix-primary">
+                        <i class="fas fa-star text-warning"></i>
+                        <span>Favt</span>
+                    </button>
+                </div> *@
+                <div class="d-flex flex-wrap align-items-end pe-1">
+                    <button type="button" class="btn btn-phoenix-primary" id="saveShipmentBtn">
+                        <i class="fas fa-save text-success"></i>
+                        <span>Save</span>
+                    </button>
+                    <button type="button" class="btn btn-phoenix-primary" id="deleteShipmentBtn">
+                        <i class="fas fa-trash text-danger"></i>
+                        <span>Delete</span>
+                    </button>
+                    <button type="button" class="btn btn-phoenix-primary" id="clearShipmentBtn">
+                        <i class="fas fa-sync text-primary"></i>
+                        <span>Clear</span>
+                    </button>
+                    <button type="button" class="btn btn-phoenix-primary" id="printShipmentBtn">
+                        <i class="fas fa-print text-dark"></i>
+                        <span>Print</span>
+                    </button>
+                    <button type="button" class="btn btn-phoenix-primary" id="favtShipmentBtn">
                         <i class="fas fa-star text-warning"></i>
                         <span>Favt</span>
                     </button>
@@ -455,7 +478,7 @@
                 <div class="border-bottom border-2 pt-1"></div>
 
                 <form asp-action="Create" method="post" id="shipmentForm">
-                    <div class="row ">
+                    <div class="row pb-2">
                         @Html.AntiForgeryToken()
 
                         <input type="hidden" asp-for="JobNo" id="jobNoHidden" value="" />
@@ -494,7 +517,7 @@
                         <!-- ETD Date -->
                         <div class="col-lg-4 col-md-6">
                             <label class="form-label">ETD Date</label>
-                            <input asp-for="ETDDate" type="text" class="form-control form-control-sm custom-holiday-tooltip caiCon" id="etdDate" />
+                            <input asp-for="ETDDate" type="text" class="form-control form-control-sm custom-datepicker caiCon" id="etdDate" />
                             <span asp-validation-for="ETDDate" class="text-danger"></span>
                         </div>
 
@@ -527,17 +550,17 @@
                         <div class="col-lg-4 col-md-6"></div>
 
                         <!-- Creation Date -->
-                        <div class="col-lg-4 col-md-6 d-flex align-items-center">
+                        <div class="col-lg-4 col-md-6 d-flex align-items-center create-modify-dateshow" >
                             <label class="form-label text-nowrap ">Creation Date:</label>
-                            <span class="form-control-plaintext flex-grow-1 ps-2 fs-9" id="creationDate"></span>
+                            <span class="form-control-plaintext flex-grow-1 fs-9" id="creationDate"></span>
                         </div>
 
-                        <div class="col-lg-4 col-md-6"></div>
+                        <div class="col-lg-4 col-md-6 create-modify-dateshow"></div>
 
                         <!-- Updated Date -->
-                        <div class="col-lg-4 col-md-6 d-flex align-items-center">
+                        <div class="col-lg-4 col-md-6 d-flex align-items-center create-modify-dateshow">
                             <label class="form-label  text-nowrap mb-0">Updated Date:</label>
-                            <span class="form-control-plaintext flex-grow-1 ps-2 fs-9" id="updatedDate"></span>
+                            <span class="form-control-plaintext flex-grow-1 fs-9" id="updatedDate"></span>
                         </div>
                     </div>
                 </form>

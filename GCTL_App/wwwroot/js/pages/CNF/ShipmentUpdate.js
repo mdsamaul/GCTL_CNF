@@ -1,4 +1,5 @@
-﻿
+﻿// const { set } = require("../../config");
+
 // Example usage: Populate with sample data
 $(document).ready(function () {
 
@@ -14,6 +15,7 @@ $(document).ready(function () {
         //     language: { noResults: () => 'No results found' },
         //     escapeMarkup: markup => markup
         // });
+        $(".create-modify-dateshow").addClass('d-none').removeClass('d-flex');
     };
 
     initializeSelect();
@@ -267,6 +269,7 @@ $(document).ready(function () {
             type: 'GET',
             data: params,
             success: function (response) {
+                
                 renderStatusTable(response.data);
                 statusFilteredRecords = response.filteredRecords;
 
@@ -330,8 +333,7 @@ $(document).ready(function () {
                 type: 'GET',
                 data: { jobNo: jobNo, id: id },
                 success: function (response) {
-
-
+                   
                     populateForm(response.jobTop)
                     populateBottomForm(response.jobBottom)
 
@@ -442,66 +444,62 @@ $(document).ready(function () {
 
 
 });
-
+$('#clearShipmentBtn').on('click', function (e) {
+    e.preventDefault();
+    clearForm();
+});
 //#region Clr
 function clearForm() {
-    // Text inputs
-    $('#jobNo').val('');
-    $('#jobNoHidden').val('');
-    $('#jobDate').val('');
-    $('#customerDeliveryAddress').val('');
-    $('#docsReceivedDate').val('');
-    $('#lcExpNo').val('');
-    $('#lcValue').val('');
-    $('#ipEpNo').val('');
-    $('#ipDate').val('');
-    $('#invoiceNo').val('');
-    $('#invoiceDate').val('');
-    $('#blNo').val('');
-    $('#blDate').val('');
-    $('#beNo').val('');
-    $('#beDate').val('');
-    $('#containerNo').val('');
-    $('#containerSize').val('');
-    $('#lcaNo').val('');
-    $('#dischargeDate').val('');
-    $('#materialDescription').val('');
-    $('#quantity').val('');
-    $('#weight').val('');
-    $('#vesselRottNo').val('');
-    $('#remarks').val('');
-    $('#creationDate').val('');
-    $('#updatedDate').val('');
-
-    // Date fields (Bottom form)
-    $('#etaDeliveryDate').val('');
-    $('#actualDeliveryDate').val('');
-    $('#unstuffingDate').val('');
-    $('#etdDate').val('');
-
-    // Custom Dropdowns - instance.clear() call korte hobe, .val().trigger('change') na
-    var dropdownIds = [
-        '#shipmentModeId', '#customerId', '#portId', '#importerId',
-        '#quantityUnitId', '#weightUnitId', '#forwarderId',
-        '#placeOfLoadingId', '#shedYardId', '#freightChargeId'
-    ];
-
-    dropdownIds.forEach(function (id) {
-        var instance = $(id).data('customDdInstance');
-        if (instance) {
-            instance.clear();
-        } else {
-            // customDropdown init na thakle fallback
-            $(id).val('').trigger('change');
-        }
-    });
-
-    // Textarea
-    $('#shipmentStatus').val('');
-    $('#autoId').val('');
-
-    // Checkboxes
+   
+    setCustomDropdownValue('#shipmentModeId', '', false);
     $('#isCustomJobNo').prop('checked', false);
+    setField('#jobNo', '', false);
+    setField('#customerAddress', '', false);
+    setField('#jobNoHidden', '', false);
+    setDate('#jobDate', '', false);
+    setCustomDropdownValue('#customerId', '', false);
+    setField('#customerDeliveryAddress', '', false);
+    setCustomDropdownValue('#portId', '', false);
+    setCustomDropdownValue('#lcUnitId', '', false);
+    setDate('#docsReceivedDate', '', false);
+    setField('#lcExpNo', '', false);
+    setField('#lcValue', '', false);
+    setField('#ipEpNo', '', false);
+    setDate('#ipDate', '', false);
+    setCustomDropdownValue('#importerId', '', false);
+    setField('#invoiceNo', '', false);
+    setDate('#invoiceDate', '', false);
+    setField('#blNo', '', false);
+    setDate('#blDate', '', false);
+    setField('#beNo', '', false);
+    setDate('#beDate', '', false);
+    setField('#containerNo', '', false);
+    setField('#containerSize', '', false);
+    setField('#lcaNo', '', false);
+    setDate('#dischargeDate', '', false);
+    setCustomDropdownValue('#quantityUnitId', '',false)
+    setCustomDropdownValue('#weightUnitId', '', false);
+    setCustomDropdownValue('#forwarderId', '', false);
+    setField('#materialDescription', '', false);
+    setField('#quantity', '', false);
+    setField('#weight', '', false);
+    setField('#vesselRottNo', '', false);
+    setField('#remarks', '', false);
+    setDate('#etaDeliveryDate', '', false);
+    setDate('#actualDeliveryDate', '', false);
+    setDate('#unstuffingDate', '', false);
+    setDate('#unstuffingDate', '', false);
+    setDate('#etdDate', '', false);
+    setDate('#etdDate', '', false);
+    setCustomDropdownValue('#placeOfLoadingId', '', false);
+    setCustomDropdownValue('#shedYardId', '', false);
+    setCustomDropdownValue('#freightChargeId', '', false);
+    setCustomDropdownValue('#freightChargeId', '', false);
+    setField('#shipmentStatus', '', false);
+    setField('#creationDate', '', false);
+    setField('#updatedDate', '', false);
+    setField('#autoId', '', false);
+    $('.create-modify-dateshow').addClass('d-none');
 }
 //#endregion
 
@@ -512,80 +510,92 @@ function populateBottomForm(data) {
 
     // Date fields
     if (data.etaDeliveryDate) {
-        $('#etaDeliveryDate').val(data.etaDeliveryDate.split('T')[0]);
+        setDate('#etaDeliveryDate', data.etaDeliveryDate.split('T')[0]);
     }
     if (data.actualDeliveryDate) {
-        $('#actualDeliveryDate').val(data.actualDeliveryDate.split('T')[0]);
+        setDate('#actualDeliveryDate',data.actualDeliveryDate.split('T')[0]);
     }
     if (data.unstuffingDate) {
-        $('#unstuffingDate').val(data.unstuffingDate.split('T')[0]);
+        setDate('#unstuffingDate',data.unstuffingDate.split('T')[0]);
     }
     if (data.etdDate) {
-        $('#etdDate').val(data.etdDate.split('T')[0]);
+        setDate('#etdDate',data.etdDate.split('T')[0]);
     }
 
     // Dropdowns
     if (data.placeOfLoadingID) {
-        $('#placeOfLoadingId').val(data.placeOfLoadingID).trigger('change');
+        setCustomDropdownValue('#placeOfLoadingId',data.placeOfLoadingID);
     }
     if (data.shedYardID) {
-        $('#shedYardId').val(data.shedYardID).trigger('change');
+        setCustomDropdownValue('#shedYardId',data.shedYardID);
     }
     if (data.freightChargeID) {
-        $('#freightChargeId').val(data.freightChargeID).trigger('change');
+        setCustomDropdownValue('#freightChargeId',data.freightChargeID);
     }
 
     // Textarea
     if (data.shipmentStatus) {
-        $('#shipmentStatus').val(data.shipmentStatus);
+        setField('#shipmentStatus',data.shipmentStatus);
     }
 
 
     if (data.autoId) {
-        $('#autoId').val(data.autoId);
-
-
+        setField('#autoId',data.autoId);
+    }
+    setField('#creationDate', data.createdAt || '', true);
+    setField('#updatedDate', data.updatedAt || '', true);
+    if (data.createdAt || data.updatedAt) {
+        $('.create-modify-dateshow').removeClass('d-none').each(function () {
+            if ($(this).hasClass('d-flex') === false && $(this).find('label').length) {
+                $(this).addClass('d-flex');
+            }
+        });
+    } else {
+        $('.create-modify-dateshow').addClass('d-none');
     }
 }
 
 function populateForm(data) {
 
     showDev(data)
-
-    setCustomDropdownValue('#shipmentModeId', data.shipmentModeId);
+    setCustomDropdownValue('#shipmentModeId', data.shipmentModeId, true);
     $('#isCustomJobNo').prop('checked', data.isCustomJobNo || false);
-    $('#jobNo').val(data.jobNo || '');
-    $('#jobNoHidden').val(data.jobNo || '');
-    $('#jobDate').val(data.jobDate || '');
-    setCustomDropdownValue('#customerId', data.customerId);
-    $('#customerDeliveryAddress').val(data.customerDeliveryAddress || '');
-    setCustomDropdownValue('#portId', data.portId);
-    $('#docsReceivedDate').val(data.docsReceivedDate || '');
-    $('#lcExpNo').val(data.lcExpNo || '');
-    $('#lcValue').val(data.lcValue || '');
-    $('#ipEpNo').val(data.ipEpNo || '');
-    $('#ipDate').val(data.ipDate || '');
-    setCustomDropdownValue('#importerId', data.importerId);
-    $('#invoiceNo').val(data.invoiceNo || '');
-    $('#invoiceDate').val(data.invoiceDate || '');
-    $('#blNo').val(data.blNo || '');
-    $('#blDate').val(data.blDate || '');
-    $('#beNo').val(data.beNo || '');
-    $('#beDate').val(data.beDate || '');
-    $('#containerNo').val(data.containerNo || '');
-    $('#containerSize').val(data.containerSize || '');
-    $('#lcaNo').val(data.lcaNo || '');
-    $('#dischargeDate').val(data.dischargeDate || '');
-    $('#materialDescription').val(data.materialDescription || '');
-    $('#quantity').val(data.quantity || '');
-    setCustomDropdownValue('#quantityUnitId', data.quantityUnitId);
-    $('#weight').val(data.weight || '');
-    setCustomDropdownValue('#weightUnitId', data.weightUnitId);
-    setCustomDropdownValue('#forwarderId', data.forwarderId);
-    $('#vesselRottNo').val(data.vesselRottNo || '');
-    $('#remarks').val(data.remarks || '');
-    $('#creationDate').val(data.createdAt || '');
-    $('#updatedDate').val(data.updatedAt || '');
+    setField('#jobNo', data.jobNo || '', true);
+    setField('#customerAddress', data.updatedAt || '', true);
+    setField('#jobNoHidden', data.jobNo || '', true);
+    setDate('#jobDate', data.jobDate || '', true);
+    setCustomDropdownValue('#customerId', data.customerId, true);
+    setField('#customerDeliveryAddress',data.customerDeliveryAddress || '', true);
+    setCustomDropdownValue('#portId', data.portId, true);
+    setCustomDropdownValue('#lcUnitId', "", true);
+    setDate('#docsReceivedDate', data.customerAddress || '', true);
+    setField('#lcExpNo', data.lcExpNo || '', true);
+    setField('#lcValue', data.lcValue || '', true);
+    setField('#ipEpNo', data.ipEpNo || '', true);
+    setDate('#ipDate', data.ipDate || '', true);
+    setCustomDropdownValue('#importerId', data.importerId, true);
+    setField('#invoiceNo', data.invoiceNo || '', true);
+    setDate('#invoiceDate', data.invoiceDate || '', true);
+    setField('#blNo', data.blNo || '', true);
+    setDate('#blDate', data.blDate || '', true);
+    setField('#beNo', data.beNo || '', true);
+    setDate('#beDate', data.beDate || '', true);
+    setField('#containerNo', data.containerNo || '', true);
+    setField('#containerSize', data.containerSize || '', true);
+    setField('#lcaNo', data.lcaNo || '', true);
+    setDate('#dischargeDate', data.dischargeDate || '', true);
+    setCustomDropdownValue('#quantityUnitId', data.quantityUnitId, true);
+    setCustomDropdownValue('#weightUnitId', data.weightUnitId, true);
+    setCustomDropdownValue('#forwarderId', data.forwarderId, true);
+    setField('#materialDescription', data.materialDescription || '', true);
+    setField('#quantity', data.quantity || '', true);
+    setField('#weight', data.weight || '', true);
+    setField('#vesselRottNo', data.vesselRottNo || '', true);
+    setField('#remarks', data.remarks || '', true);
+  
+
+
+  
 }
 
 

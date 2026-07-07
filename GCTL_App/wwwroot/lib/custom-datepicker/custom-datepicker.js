@@ -234,6 +234,10 @@
                 addClearButton(fpInstance);
             },
             onOpen: function (selectedDates, dateStr, fpInstance) {
+                if (fpInstance._customDisabled) {
+                    fpInstance.close();
+                    return;
+                }
                 fpInstance.calendarContainer.style.transformOrigin = 'top center';
                 hideEmptyTrailingRow(fpInstance);
             },
@@ -268,6 +272,31 @@
             $el.removeData('customFpInstance');
         }
     }
+
+    // ---------------- Global setDate ----------------
+    window.setDate = function (selector, value, disabled = false) {
+        var $el = $(selector);
+        var fp = $el.data('customFpInstance');
+
+        if (!fp) {
+            $el.val(value || '');
+            $el.prop('disabled', !!disabled);
+            return;
+        }
+
+        if (!value) {
+            fp.clear();
+        } else {
+            fp.setDate(value, true);
+        }
+
+        fp._customDisabled = !!disabled;
+        $el.prop('disabled', !!disabled);
+        if (fp.altInput) fp.altInput.disabled = !!disabled;
+        if (disabled) fp.close();
+    };
+
+    
     $(function () {
         initAll('.custom-datepicker');
     });

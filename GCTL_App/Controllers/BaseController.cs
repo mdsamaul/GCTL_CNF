@@ -119,6 +119,35 @@ namespace GCTL_App.Controllers
 
             return currentEmployeeId;
         }
+        protected async Task<int?> GetCurrentOrganizationIdAsync()
+        {
+            int? currentOrganizationId = null;
+            if (User?.Identity?.IsAuthenticated == true)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    // Fetch current organization ID using IUserProfileService
+                    currentOrganizationId = await _userProfileService.GetCurrentOrganizationIdAsync(userId);
+                }
+            }
+            return currentOrganizationId;
+        }
+        protected async Task<int?> GetCurrentCompanyIdAsync()
+        {
+            int? currentCompanyId = null;
+            if (User?.Identity?.IsAuthenticated == true)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    // Fetch current organization ID using IUserProfileService
+                    currentCompanyId = await _userProfileService.GetCurrentCompanyIdAsync(userId);
+                }
+            }
+            return currentCompanyId;
+        }
+
 
         [HttpGet]
         public async Task<JsonResult> GetHolidays([FromServices] IholidayListService holidayService, int? year = null)
