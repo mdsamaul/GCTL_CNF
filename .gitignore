@@ -69,3 +69,5 @@ Migrations/*.resx
 # User-specific
 appsettings.Development.json
 appsettings.Local.json
+/.github/copilot-instructions.md
+/.gitignore
