@@ -210,11 +210,13 @@ namespace GCTL.Service.ClearAndF.Update
                  JobDate = h.Date.Value.ToShortDateString(),
                  CustomerId = h.CustomerID,
                  CustomerName = h.CustomerID,
+                 CustomerAddress = h.CustomerAddress,
                  CustomerDeliveryAddress = h.DeliveryLocationCode, //TODO: DElivery add
                  PortId = h.PortId,
                  DocsReceivedDate = h.DocReceivedDate.Value.ToShortDateString(),
                  LcExpNo = h.ExpNo,
                  LcValue = h.LCValue,
+                 //LcUnitId= h.lc
                  IpEpNo = h.IPNo,
                  IpDate = h.IPDate.Value.ToString(),
                  ImporterId = h.ImporterID,
@@ -327,8 +329,8 @@ namespace GCTL.Service.ClearAndF.Update
                 doucument.ETDDate = model.ETDDate; 
                 doucument.PlaceOfLoadingID = model.PlaceOfLoadingID; 
                 doucument.ShedYardID = model.ShedYardID; 
-                doucument.FreightCharge = model.FreightChargeID; 
-
+                doucument.FreightCharge = model.FreightChargeID;
+                doucument.ModifyDate = DateTime.Now;
                 await _sepDocumentionRepository.UpdateAsync(doucument);
 
                 if (model.AutoId > 0)
@@ -338,10 +340,8 @@ namespace GCTL.Service.ClearAndF.Update
                     if (prevData != null)
                     {
                         prevData.UpdateStatus = model.ShipmentStatus;
-
                         prevData.UpdateDateTime = DateTime.Now;
                         prevData.ModifyDate = DateTime.Now;
-
                         prevData.LIP = model.LIP;
                         prevData.LMAC = model.LMAC;
                         prevData.EmployeeID = model.CreatedBy.ToString();
@@ -361,17 +361,13 @@ namespace GCTL.Service.ClearAndF.Update
                         JobNo = model.JobNo,
                         DailyJobUpdateEntryID = await GetLastJobEntryCode(),
                         UpdateStatus = model.ShipmentStatus,
-
                         UpdateDateTime = DateTime.Now,
-                        ModifyDate = DateTime.Now,
-
+                        LDate=DateTime.Now,
                         LIP = model.LIP,
                         LMAC = model.LMAC,
                         EmployeeID = model.CreatedBy.ToString(),
                         LUser = model.CreatedBy.ToString(),
                         CompanyCode = company.ToString()
-
-
                     };
 
                     await _jobUpdateRepository.AddAsync(updateDoc);
@@ -462,7 +458,7 @@ namespace GCTL.Service.ClearAndF.Update
                 ForwarderId = h.NameOfFreightForwarder,
                 VesselRottNo = h.Vessel_RottNo,
                 Remarks = h.Remarks,
-                DocReceivedDate = h.DocReceivedDate.Value.ToString(),
+                DocReceivedDate = h.DocReceivedDate.Value.ToString()
             })
             .FirstOrDefaultAsync(j => j.JobNo == jobNo);
 
@@ -475,7 +471,7 @@ namespace GCTL.Service.ClearAndF.Update
 
         public async Task<ShipmentUpdateViewModel> GetJobBottomDetailsAsync(string jobNo, decimal id)
         {
-            var status = await _jobUpdateRepository.All().Where(e => e.TC == id).Select(e => new { e.UpdateStatus , e.TC}).FirstOrDefaultAsync();
+            var status = await _jobUpdateRepository.All().Where(e => e.TC == id).Select(e => new { e.UpdateStatus , e.TC, e.LDate, e.ModifyDate}).FirstOrDefaultAsync();
 
             var data = await _sepDocumentionRepository.All().Where(e => e.JobNo == jobNo).Select(model => new ShipmentUpdateViewModel
             {
@@ -487,7 +483,9 @@ namespace GCTL.Service.ClearAndF.Update
                 ShedYardID = model.ShedYardID,
                 FreightChargeID = model.FreightCharge,
                 ShipmentStatus = status != null ? status.UpdateStatus : "",
-                AutoId = status != null ? status.TC : 0m
+                AutoId = status != null ? status.TC : 0m,
+                CreatedAt = status.LDate,
+                UpdatedAt = status.LDate,
             }).FirstOrDefaultAsync();
 
             return data ?? new ShipmentUpdateViewModel();

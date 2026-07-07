@@ -121,13 +121,42 @@
                 }
             });
 
+            // this.$clearIcon.on('click', function (e) {
+            //     e.stopPropagation();
+            //     self.clear();
+            // });
+
+            // this.$copyIcon.on('click', function (e) {
+            //     e.stopPropagation();
+            //     var val = self.getValue();
+            //     var isEmpty = Array.isArray(val) ? val.length === 0 : !val;
+            //     if (isEmpty) { toast('Kono item select kora nai'); return; }
+            //     var text = Array.isArray(val)
+            //         ? (self.options.copyAsJsonArray ? JSON.stringify(val) : val.join(','))
+            //         : val;
+            //     copyText(text);
+            //     toast('Copied: ' + text);
+
+
+            //     self.$copyIcon.html('<i class="fas fa-check"></i>');
+            //     self.$copyIcon.addClass('copied');
+
+            //     clearTimeout(self._copyIconTimer);
+            //     self._copyIconTimer = setTimeout(function () {
+            //         self.$copyIcon.html('<i class="fas fa-copy"></i>');
+            //         self.$copyIcon.removeClass('copied');
+            //     }, 1500);
+            // });
+
             this.$clearIcon.on('click', function (e) {
                 e.stopPropagation();
+                if (self.$wrapper.hasClass('disabled')) return;
                 self.clear();
             });
 
             this.$copyIcon.on('click', function (e) {
                 e.stopPropagation();
+                if (self.$wrapper.hasClass('disabled')) return;
                 var val = self.getValue();
                 var isEmpty = Array.isArray(val) ? val.length === 0 : !val;
                 if (isEmpty) { toast('Kono item select kora nai'); return; }
@@ -137,7 +166,6 @@
                 copyText(text);
                 toast('Copied: ' + text);
 
-                // Icon shompurno HTML replace kore dao (class add/remove na kore)
                 self.$copyIcon.html('<i class="fas fa-check"></i>');
                 self.$copyIcon.addClass('copied');
 
@@ -241,11 +269,23 @@
             });
         }
 
+        // setDisabled(disabled) {
+        //     this.$wrapper.toggleClass('disabled', !!disabled);
+        //     this.$input.prop('disabled', !!disabled);
+        // }
+
         setDisabled(disabled) {
             this.$wrapper.toggleClass('disabled', !!disabled);
             this.$input.prop('disabled', !!disabled);
-        }
 
+            if (disabled) {
+                this.$copyIcon.addClass('dd-icon-disabled');
+                this.$clearIcon.addClass('dd-icon-disabled');
+            } else {
+                this.$copyIcon.removeClass('dd-icon-disabled');
+                this.$clearIcon.removeClass('dd-icon-disabled');
+            }
+        }
         loadStaticItems(items) {
             this.data = (items || []).map(function (i) {
                 return { id: String(i.id ?? i.value), text: i.text, selected: !!i.selected };
@@ -443,12 +483,40 @@
         }
     }
 
-    function setCustomDropdownValue(selector, value) {
+    // function setCustomDropdownValue(selector, value) {
+    //     var $el = $(selector);
+    //     var instance = $el.data('customDdInstance');
+
+    //     if (!instance) {
+    //         $el.val(value).trigger('change');
+    //         return;
+    //     }
+
+    //     if (instance.isMulti) {
+    //         var arr = Array.isArray(value) ? value : (value ? [String(value)] : []);
+    //         instance.selected = arr.map(String);
+    //         instance._renderTags();
+    //     } else {
+    //         instance.selected = value ? [String(value)] : [];
+    //         var found = instance.data.find(function (d) { return d.id === String(value); });
+    //         instance.$input.val(found ? found.text : (value || ''));
+    //     }
+
+    //     instance._syncOriginalSelect();
+    //     instance._renderList(instance.data);
+    // }
+
+    function setCustomDropdownValue(selector, value, disabled = false) {
+        
         var $el = $(selector);
         var instance = $el.data('customDdInstance');
 
         if (!instance) {
             $el.val(value).trigger('change');
+            $el.prop('disabled', !!disabled);
+            if ($el.hasClass('select2-hidden-accessible')) {
+                $el.prop('disabled', !!disabled).trigger('change.select2');
+            }
             return;
         }
 
@@ -464,6 +532,7 @@
 
         instance._syncOriginalSelect();
         instance._renderList(instance.data);
+        instance.setDisabled(!!disabled);
     }
 
     window.customDropdownBase = customDropdownBase;

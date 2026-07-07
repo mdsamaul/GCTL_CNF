@@ -200,6 +200,8 @@
  *   picker hoye jabe - kono id ba manual JS call lagbe na.
  * -----------------------------------------------------------------
  */
+
+
 (function (window, $) {
     'use strict';
 
@@ -390,7 +392,30 @@
     $(function () {
         autoInitcustomTimePickers(document);
     });
+    // ---------------- Global setTime ----------------
+    window.setTime = function (selector, value, disabled = false) {
+        var $el = $(selector);
+        var instance = $el.data('custom-instance');
 
+        if (!instance) {
+            $el.val(value || '');
+            $el.prop('disabled', !!disabled);
+            return;
+        }
+
+        if (value) instance._fpInstance.setDate(value, true);
+
+        instance.$el.prop('disabled', !!disabled);
+        var $calendar = $(instance._fpInstance.calendarContainer);
+        $calendar.toggleClass('custom-time-disabled', !!disabled);
+
+        var $inputs = $calendar.find('.flatpickr-hour, .flatpickr-minute, .flatpickr-second, .flatpickr-am-pm');
+        $inputs.prop('disabled', !!disabled);
+        $inputs.css('pointer-events', disabled ? 'none' : 'auto');
+
+        var $arrows = $calendar.find('.arrowUp, .arrowDown');
+        $arrows.css('pointer-events', disabled ? 'none' : 'auto');
+    };
     // AJAX diye partial view load howar por: customTimePicker.refresh('#container');
     window.customTimePicker = customTimePicker;
     window.customTimePicker.refresh = function (scope) {

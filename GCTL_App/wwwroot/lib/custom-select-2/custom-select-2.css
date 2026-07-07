@@ -56,12 +56,36 @@
     border-color: #80bdff;
     box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
 }
-
-.custom-dd-wrapper.disabled .custom-dd-box {
-    background: #e9ecef;
-    cursor: not-allowed;
+.custom-dd-wrapper:hover,
+.custom-dd-wrapper:focus {
+    background: #eef4fc !important;
+    outline: none !important;
+}
+.custom-dd-wrapper.disabled .custom-dd-box  {
+    background-color: #f4f6f9 !important;
+    border-color: #ced4da !important;
+    color: #6c757d !important;
+    cursor: not-allowed !important;
 }
 
+.custom-dd-wrapper.disabled .custom-dd-input {
+    background-color: transparent !important;
+    color: #6c757d !important;
+    cursor: not-allowed !important;
+}
+
+.custom-dd-wrapper.disabled .custom-dd-arrow,
+.custom-dd-wrapper.disabled .custom-dd-copy-icon,
+.custom-dd-wrapper.disabled .custom-dd-clear-icon {
+    opacity: 0.5;
+    cursor: not-allowed !important;
+    pointer-events: none;
+}
+
+.custom-dd-wrapper.disabled {
+    pointer-events: none;
+    cursor:not-allowed;
+}
 .custom-dd-tags {
     display: flex;
     flex-wrap: wrap;
@@ -209,3 +233,10 @@
         opacity: 1;
         transform: translateY(0);
     }
+
+.custom-dd-copy-icon.dd-icon-disabled,
+.custom-dd-clear-icon.dd-icon-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+}

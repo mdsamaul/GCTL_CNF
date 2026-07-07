@@ -129,7 +129,8 @@ namespace GCTL_App.Controllers.ClearAndF.Update
         public async Task<IActionResult> Create(ShipmentUpdateViewModel model)
         {
 
-            var company = 1;// await GetCurrentOrganizationIdAsync();
+            //var company = 1;// await GetCurrentOrganizationIdAsync();
+            var company = await GetCurrentOrganizationIdAsync();
             var result = await _jobService.UpdateJobs(model, company);
             return Ok(result);
 

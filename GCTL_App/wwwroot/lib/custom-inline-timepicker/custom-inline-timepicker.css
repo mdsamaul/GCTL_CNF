@@ -249,3 +249,10 @@
         background: #eef4fc !important;
         outline: none !important;
     }
+
+.custom-time-disabled {
+    background:#f4f6f9;
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+}

@@ -11,6 +11,7 @@ namespace GCTL.Core.ViewModels.ClearAndF.Update
         public string JobDate { get; set; } // "yyyy-MM-dd"
         public string? CustomerId { get; set; }
         public string CustomerName { get; set; }
+        public string CustomerAddress { get; set; }
         public string CustomerDeliveryAddress { get; set; }
         public string? PortId { get; set; }
         public string DocsReceivedDate { get; set; }
