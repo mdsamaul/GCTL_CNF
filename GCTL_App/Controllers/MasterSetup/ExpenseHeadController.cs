@@ -14,7 +14,14 @@ namespace GCTL_NBR.Controllers.MasterSetup
         private readonly IExpenseHead _service;
         private readonly IShipmentMode _shipmentMode;
         private readonly IServiceType _serviceType;
-        public ExpenseHeadController(ITranslateService translateService, IUserProfileService userProfileService, IExpenseHead service, IShipmentMode shipmentMode, IServiceType serviceType) : base(translateService, userProfileService)
+        public ExpenseHeadController(
+            ITranslateService translateService,
+            IUserProfileService userProfileService,
+            IExpenseHead service,
+            IShipmentMode shipmentMode,
+            IServiceType serviceType
+            ) 
+        : base(translateService, userProfileService)
         {
             _service = service;
             _shipmentMode = shipmentMode;
@@ -89,7 +96,6 @@ namespace GCTL_NBR.Controllers.MasterSetup
 
             return Ok(new { isDuplicate = false, message = "No duplicate found." });
         }
-
 
         [HttpGet]
         [Route("expense-head-list")]
@@ -203,6 +209,7 @@ namespace GCTL_NBR.Controllers.MasterSetup
                 return Json(new { isSuccess = false, message = ex.Message });
             }
         }
+
         public async Task<IActionResult> GetAll()
         {
             var data = await _service.GetAllAsync();
@@ -236,7 +243,6 @@ namespace GCTL_NBR.Controllers.MasterSetup
                 return BadRequest(new { message = ex.Message });
             }
         }
-
 
         #region Report
 

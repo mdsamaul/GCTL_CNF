@@ -13,7 +13,14 @@ namespace GCTL_NBR.Controllers.MasterSetup
     public class ShipmentModeController : BaseController
     {
         private readonly IShipmentMode _service;
-        public ShipmentModeController(ITranslateService translateService, IUserProfileService userProfileService, IShipmentMode service) : base(translateService, userProfileService)
+        public ShipmentModeController(
+            ITranslateService translateService,
+            IUserProfileService userProfileService,
+            IShipmentMode service
+
+            ) 
+            
+        : base(translateService, userProfileService)
         {
             _service = service;
         }

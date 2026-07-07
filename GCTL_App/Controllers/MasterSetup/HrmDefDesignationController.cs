@@ -1,7 +1,5 @@
 ﻿using GCTL.Core.ViewModels.MasterSetup.HrmDefDesignations;
 using GCTL.Service.Language;
-
-//using GCTL.Core.ViewModels.PaymentManagements;
 using GCTL.Service.MasterSetup.HrmDefDesignations;
 using GCTL.Service.UserProfile;
 using GCTL_App.Controllers;
@@ -13,7 +11,8 @@ namespace GCTL_NBR.Controllers.MasterSetup
     {
         private readonly IHrmDefDesignationService _service;
 
-        public HrmDefDesignationController(ITranslateService translateService, IUserProfileService userProfileService, IHrmDefDesignationService service) : base(translateService, userProfileService)
+        public HrmDefDesignationController(ITranslateService translateService, IUserProfileService userProfileService, IHrmDefDesignationService service)
+            : base(translateService, userProfileService)
         {
             _service = service;
         }

@@ -11,22 +11,15 @@ using GCTL.Service.UserProfile;
 using GCTL_App.Controllers;
 using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
-using iText.Kernel.Events;
 using iText.Kernel.Font;
 using iText.Kernel.Geom; // Add this
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
-using iText.Kernel.Pdf.Xobject;
-using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using Microsoft.AspNetCore.Mvc;
-using OfficeOpenXml;
-using OfficeOpenXml.Style;
 using System.Data;
-using System.Linq;
-using System.Text;
 using iTextAlignment = iText.Layout.Properties.TextAlignment;  // PDF alignment
 using iTextParagraph = iText.Layout.Element.Paragraph;  // PDF Paragraph alias
 using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
@@ -37,26 +30,23 @@ using WordDoc = DocumentFormat.OpenXml.Wordprocessing.Document;
 using WordDocu = DocumentFormat.OpenXml.Wordprocessing;
 using WordPageSize = DocumentFormat.OpenXml.Wordprocessing.PageSize;
 
-
-
-
-
-
-
-
-
 namespace GCTL_NBR.Controllers.CustomerRelationshipManagement
 {
     public class SalesCustomerController : BaseController
     {
         private readonly ISalesCustomerService _salesCustomerService;
         private readonly IContactPersonService _contactPersonService;
-        public SalesCustomerController(ITranslateService translateService, IUserProfileService userProfileService, ISalesCustomerService salesCustomerService, IContactPersonService contactPersonService) : base(translateService, userProfileService)
+        public SalesCustomerController(
+            ITranslateService translateService,
+            IUserProfileService userProfileService,
+            ISalesCustomerService salesCustomerService,
+            IContactPersonService contactPersonService
+            
+            ) : base(translateService, userProfileService)
         {
             _salesCustomerService = salesCustomerService;
             _contactPersonService = contactPersonService;
         }
-
 
         public async Task<IActionResult> Index()
         {

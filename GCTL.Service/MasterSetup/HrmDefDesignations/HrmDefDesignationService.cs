@@ -201,7 +201,6 @@ namespace GCTL.Service.MasterSetup.HrmDefDesignations
             }
         }
 
-
         public async Task<bool> IsDuplicateAsync(  HrmDefDesignationViewModel model)
         {
             if (model == null)

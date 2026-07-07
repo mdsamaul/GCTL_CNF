@@ -13,14 +13,20 @@ namespace GCTL_App.Controllers.CharOfAccount
         private readonly ISubSidiaryLedger _service;
         private readonly ISubControlLedger _subcontrolLedger;
         private readonly IContrlLedger _controlLedger;
-        public SubSidiaryLedgerController(ITranslateService translateService, IUserProfileService userProfileService, ISubSidiaryLedger service, ISubControlLedger subControlLedger, IContrlLedger controlLedger) : base(translateService, userProfileService)
+        public SubSidiaryLedgerController(
+            ITranslateService translateService,
+            IUserProfileService userProfileService,
+            ISubSidiaryLedger service,
+            ISubControlLedger subControlLedger,
+            IContrlLedger controlLedger
+            
+            )
+        : base(translateService, userProfileService)
         {
             _service = service;
             _subcontrolLedger = subControlLedger;
             _controlLedger = controlLedger;
         }
-
-
 
         [HttpGet]
         [Route("subsidiary-ledger/details/{id}")]
@@ -37,14 +43,12 @@ namespace GCTL_App.Controllers.CharOfAccount
             return Ok(data);
         }
 
-
         [HttpGet("next-subsidiary-ledger-code")]
         public async Task<IActionResult> GenerateNewIdAsync(string subcontrolLedgercode)
         {
             var newCode = await _service.GetLastSubSidiaryLedgerCodeAsync(subcontrolLedgercode);
             return Ok(newCode);
         }
-
 
         [HttpGet]
         [Route("subsidiary-ledger-list")]
@@ -81,7 +85,6 @@ namespace GCTL_App.Controllers.CharOfAccount
             }
         }
 
-
         [HttpPost]
         [Route("subsidiary-ledger/check-duplicate")]
         public async Task<IActionResult> CheckDuplicate([FromBody] SubsidiaryLedgerVM model)
@@ -97,7 +100,6 @@ namespace GCTL_App.Controllers.CharOfAccount
 
             return Ok(new { isDuplicate = false, message = "No Duplicate Found." });
         }
-
 
         [HttpPost]
         [Route("subsidiary-ledger")]
@@ -128,7 +130,6 @@ namespace GCTL_App.Controllers.CharOfAccount
                 return StatusCode(500, new { message = "An Error Occurred.", error = ex.Message });
             }
         }
-
 
         [HttpPut]
         [Route("subsidiary-ledger/{id}")]
