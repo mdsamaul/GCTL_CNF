@@ -29,6 +29,12 @@ function setupCountryEventListeners() {
         loadPaginatedCountry();
     })
 
+    $('#country-pageSize').on('change', function () {
+        pageSizeCountry = parseInt($(this).val());
+        currentpageCountry = 1;
+        loadPaginatedCountry();
+    });
+
 
     $('th.country-sort').on('click', function () {
         const column = $(this).data('sort');

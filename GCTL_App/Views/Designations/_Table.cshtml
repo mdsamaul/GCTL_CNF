@@ -74,78 +74,257 @@
     </div>
     <div class="card-footer border-0 mb-2"></div>
 </div> *@
-<div class="card mb-2">
-    <div class="card-header border-bottom-1">
-        <div class="row justify-content-between align-items-center">
-            <div class="col-auto">
-                <h3 class="text-body-emphasis mt-3">@Html.SmartLocalize("Information of Designations")</h3>
+
+
+
+@* <div class="d-flex flex-column">
+    <div class="card shadow rounded-2 flex-grow-1 d-flex">
+
+        <!-- Card Header -->
+        <div class="card-header bg-light rounded-top-2">
+            <div class="row align-items-center">
+                <div class="col-md-6 d-flex align-items-center mb-2 mb-md-0">
+                    <label class="me-2 mb-0">@Html.SmartLocalize("Show")</label>
+                    <select id="designation-pageSizeSelect" class="form-select form-select-sm me-2 pageSize" style="max-width: 100px;">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="-1">All</option>
+                    </select>
+                    <label class="mb-0">@Html.SmartLocalize("Entries")</label>
+                </div>
+                <div class="col-md-6 d-flex justify-content-md-end">
+                    <input type="text" id="designation-searchInput" class="form-control form-control-sm w-100 searchInput"
+                           style="max-width: 300px;" placeholder="@Html.SmartLocalize("Search here")">
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="card-body py-0 scrollbar to-do-list-body">
-        <div class="mx-n4 px-4 mx-lg-n6 px-lg-6 bg-body-emphasis py-5 border-y">
-            <div class="row g-3 justify-content-between align-items-end mb-4">
-                <div class="col-12 col-sm-auto">
-                    <div class="d-flex align-items-center me-3" style="width: auto;">
-                        <span class="ms-2">@Html.SmartLocalize("Showing"):</span> &nbsp;
-                        <div style="width: 100%;">
-                            <select id="designation-pageSizeSelect" class="form-select form-select-sm" tabindex="10">
-                                <option class="dropdown-item" value="5">@Html.SmartLocalize("5")</option>
-                                <option class="dropdown-item" value="10">@Html.SmartLocalize("10")</option>
-                                <option class="dropdown-item" value="25">@Html.SmartLocalize("25")</option>
-                                <option class="dropdown-item" value="50">@Html.SmartLocalize("50")</option>
-                                <option class="dropdown-item" value="100">@Html.SmartLocalize("100")</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-auto">
-                    <div class="d-flex align-items-center">
-                        <div class="d-none me-3" id="designation-bulkSelectActions">
-                            <div class="position-relative">
-                                <button type="button" class="btn btn-phoenix-danger btn-sm ms-2" id="designation-delSel">@Html.SmartLocalize("Delete")</button>
-                            </div>
-                        </div>
-
-                        <div class="search-box me-3" id="designation-searchBox">
-                            <form class="position-relative" id="designation-searchForm">
-                                <input class="form-control search-input search" id="designation-searchInput" type="search" placeholder="@Html.SmartLocalize("Search here")" aria-label="Search" />
-                                <span class="fas fa-search search-box-icon"></span>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="table-responsive ms-n1 ps-1 scrollbar">
-                <table class="table fs-9 mb-0 border-top border-translucent">
-                    <thead>
+        <!-- Table -->
+        <div class="card-body p-2 flex-grow-1 d-flex flex-column">
+            <div class="table-responsive flex-grow-1" style="overflow-y: auto; max-height: 600px;">
+                <table class="table table-hover table-sm mb-0">
+                    <thead class="text-nowrap align-middle sticky-top" style="font-size: 0.85rem; background:#fff;">
                         <tr>
-                            <th class="text-center text-middle align-middle ps-0" scope="col" style="width: 5%;">
-                                <input type="checkbox" class="form-check-input" id="designation-check-all" />
+                            <th class="text-center text-middle" style="width:50px;">
+                                <input type="checkbox" id="designation-check-all" class="form-check-input">
                             </th>
-                            <th class="text-center text-middle align-middle ps-0" scope="col" style="width: 10%;">@Html.SmartLocalize("Sl. No")</th>
-                            <th class="sort white-space-nowrap align-middle ps-0" scope="col" data-sort="DesignationName">@Html.SmartLocalize("Designation Name")</th>
-                            <th class="white-space-nowrap align-middle ps-0" scope="col" style="width: 10%;">@Html.SmartLocalize("Action")</th>
+                            <th class="sortable text-center text-middle" data-column="DesignationId" style="width:90px;">
+                                @Html.SmartLocalize("ID") <i class="sort-icon fas fa-sort"></i>
+                            </th>
+                            <th class="sortable text-center text-middle" data-column="DesignationName">
+                                @Html.SmartLocalize("Designation Name") <i class="sort-icon fas fa-sort"></i>
+                            </th>
+                            <th class="text-center text-middle">
+                                @Html.SmartLocalize("Short Name") <i class="sort-icon fas fa-sort"></i>
+                            </th>
                         </tr>
                     </thead>
                     <tbody id="designation-tBody">
+                        <tr class="no-data">
+                            <td colspan="4" class="text-center py-4">
+                                @Html.SmartLocalize("No data available")
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
+        </div>
 
-            <div class="d-flex flex-wrap align-items-center justify-content-between py-3 pe-0 fs-9 border-bottom border-translucent">
-                <div class="d-flex">
-                    <p class="mb-0 d-none d-sm-block me-3 fw-semibold text-body" id="designation-paginationInfo"></p>
-                    <p class="mb-0 d-none d-sm-block me-3 fw-semibold text-body" data-list-info="data-list-info"></p>
+        <!-- Footer -->
+        <div class="card-footer bg-light position-sticky bottom-0">
+            <div class="row align-items-center mb-2">
+                <div class="col-4">
+                    <span id="designation-pageInfo" class="text-muted" style="font-size: 0.85rem;">Page 1 of 1</span>
                 </div>
-                <div class="d-flex">
-                    <button class="page-link" data-list-pagination="prev" id="designation-prevPageBtn"><span class="fas fa-chevron-left"></span></button>
-                    <ul class="mb-0 pagination" id="designation-paginationLinks"></ul>
-                    <button class="page-link pe-0" data-list-pagination="next" id="designation-nextPageBtn"><span class="fas fa-chevron-right"></span></button>
+                <div class="col-4 text-center">
+                    <span id="designation-paginationInfo" class="text-primary" style="font-size: 0.85rem;">
+                        Showing 1 to 10 of 10 entries
+                    </span>
+                </div>
+                <div class="col-4 text-end">
+                    <span id="designation-totalRecords" class="text-muted" style="font-size: 0.85rem;">Total Records: 0</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="btn-group">
+                        <button id="designation-firstPage" class="btn btn-outline-primary btn-sm rounded-pill me-1">First</button>
+                        <button id="designation-prevPageBtn" class="btn btn-outline-primary btn-sm rounded-pill">Previous</button>
+                    </div>
+                    <div id="designation-paginationLinks" class="btn-group mx-2">
+                        <!-- Dynamic page number buttons: active page uses .btn-primary rounded-pill, others .btn-outline-primary rounded-pill -->
+                    </div>
+                    <div class="btn-group">
+                        <button id="designation-nextPageBtn" class="btn btn-outline-primary btn-sm rounded-pill">Next</button>
+                        <button id="designation-lastPage" class="btn btn-outline-primary btn-sm rounded-pill ms-1">Last</button>
+                    </div>
                 </div>
             </div>
         </div>
+
+    </div>
+</div> *@
+
+
+<div class="d-flex flex-column">
+    <div class="card shadow rounded-2 flex-grow-1 d-flex">
+
+        <!-- Header -->
+        <div class="card-header bg-light rounded-top-2">
+            <div class="row align-items-center">
+
+                <!-- Page Size -->
+                <div class="col-md-6 d-flex align-items-center">
+                    <label class="me-2 mb-0">@Html.SmartLocalize("Show")</label>
+
+                    <select id="designation-pageSizeSelect"
+                            class="form-select form-select-sm"
+                            style="width:90px;">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+
+                    <label class="ms-2 mb-0">@Html.SmartLocalize("Entries")</label>
+                </div>
+
+                <!-- Search -->
+                <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                    <input type="text"
+                           id="designation-searchInput"
+                           class="form-control form-control-sm d-inline-block"
+                           style="max-width:250px;"
+                           placeholder="@Html.SmartLocalize("Search here")">
+                </div>
+
+            </div>
+        </div>
+        <div class="card-body p-2 flex-grow-1 d-flex flex-column">
+            <!-- Table -->
+            <div class="table-responsive flex-grow-1" style="overflow-y: auto; max-height: 600px;">
+
+                <table class="table table-hover table-sm table-bordered mb-0">
+                    <thead class="table-light align-middle text-nowrap sticky-top" style="font-size: 0.8rem;">
+
+                        <tr>
+
+                            <th class="text-center text-middle" style="width:50px;">
+                                <input type="checkbox"
+                                       id="designation-check-all"
+                                       class="form-check-input">
+                            </th>
+
+                            <th class="text-center text-middle" style="width:100px;">
+                                @Html.SmartLocalize("ID")
+                                <i class="fa fa-sort text-secondary ms-1"></i>
+                            </th>
+
+                            <th class="text-center text-middle">
+                                @Html.SmartLocalize("Designation Name")
+                                <i class="fa fa-sort text-secondary ms-1"></i>
+                            </th>
+
+                            <th class="text-center text-middle" style="width:150px;">
+                                @Html.SmartLocalize("Action")
+                            </th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody id="designation-tBody">
+
+                        <!-- Dynamic Rows -->
+
+                        <tr class="no-data">
+                            <td colspan="4" class="text-center py-4">
+                                @Html.SmartLocalize("No data available")
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+        <!-- Information Row -->
+        <div class="card-footer bg-light position-sticky bottom-0">
+
+            <div class="row align-items-center mb-2">
+
+                <!-- Left -->
+                <div class="col-md-3 text-center text-md-start">
+                    <span id="designation-pageInfo">
+                        Page 1 of 1
+                    </span>
+                </div>
+
+                <!-- Center -->
+                <div class="col-md-6 text-center">
+                    <span id="designation-paginationInfo"
+                          class="text-primary">
+                        Showing 1 to 10 Items of 10 entries
+                    </span>
+                </div>
+
+                <!-- Right -->
+                <div class="col-md-3 text-center text-md-end">
+                    <span id="designation-totalRecords">
+                        Total Records: 0
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Pagination -->
+        <div class="text-center pb-3">
+
+            <div class="btn-group">
+
+                <button id="designation-firstPage"
+                        class="btn btn-outline-primary btn-sm">
+                    First
+                </button>
+
+                <button id="designation-prevPageBtn"
+                        class="btn btn-outline-primary btn-sm">
+                    Previous
+                </button>
+
+            </div>
+
+            <ul id="designation-paginationLinks"
+                class="pagination d-inline-flex mx-2 mb-0 align-middle">
+
+                <!-- Dynamic Page Numbers -->
+
+                <li class="page-item active">
+                    <a class="page-link" href="#">1</a>
+                </li>
+
+            </ul>
+
+            <div class="btn-group">
+
+                <button id="designation-nextPageBtn"
+                        class="btn btn-outline-primary btn-sm">
+                    Next
+                </button>
+
+                <button id="designation-lastPage"
+                        class="btn btn-outline-primary btn-sm">
+                    Last
+                </button>
+
+            </div>
+
+        </div>
+
     </div>
 </div>

@@ -169,10 +169,10 @@ function LoadBranchList(page = 1, pageSizeVal = pageSize, sortColumn = currentSo
                                 ${item.branchCode}
                             </button>
                         </td>
-                        <td class="align-middle">${item.branchName || ''}</td>    
-                        <td class="align-middle">${item.address || ''}</td>
-                        <td class="align-middle">${item.phone || ''}</td>
-                        <td class="align-middle">${item.email || ''}</td>
+                        <td class="text-middle">${item.branchName || ''}</td>    
+                        <td class="text-middle">${item.address || ''}</td>
+                        <td class="text-center text-middle">${item.phone || ''}</td>
+                        <td class="text-center text-middle">${item.email || ''}</td>
                     </tr>`;
                 });
             }

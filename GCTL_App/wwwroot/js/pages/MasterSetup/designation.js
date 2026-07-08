@@ -262,14 +262,20 @@
         var currentPage = 1;
         var pageSize = 5;
 
-        $('#designation-pageSizeSelect').on('change', function () {
-            var selectedSize = $(this).val();
+        //$('#designation-pageSizeSelect').on('change', function () {
+        //    var selectedSize = $(this).val();
 
-            if (selectedSize) {
-                pageSize = parseInt(selectedSize, 10);
-                currentPage = 1;
-                loadTableData();
-            }
+        //    if (selectedSize) {
+        //        pageSize = parseInt(selectedSize, 10);
+        //        currentPage = 1;
+        //        loadTableData();
+        //    }
+        //});
+
+        $('#designation-pageSizeSelect').on('change', function () {
+            pageSize = parseInt($(this).val());
+            currentPage = 1;
+            loadTableData();
         });
 
 

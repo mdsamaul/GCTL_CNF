@@ -191,7 +191,7 @@
                                     <input type="checkbox" class="form-check-input form-check-input-sm row-checkbox"
                                            style="width: 12px; height: 12px;" data-tcidcheck="${item.tc}">
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <button class="btn btn-transfer"
                                         data-tcidbtn="${item.tc}"
                                         data-currencyid="${item.currencyId}"
@@ -205,11 +205,11 @@
                                         ${item.currencyId}
                                     </button>
                                 </td>
-                                <td>${item.currencyName || ''}</td>
-                                <td>${item.shortName || ''}</td>
-                                <td>${item.symbol || ''}</td>
-                                <td>${item.decimalPlaces || ''}</td>
-                                <td>${item.negativeFormat || ''}</td>
+                                <td class="text-start align-middle">${item.currencyName || ''}</td>
+                                <td class="text-center align-middle">${item.shortName || ''}</td>
+                                <td class="text-center align-middle">${item.symbol || ''}</td>
+                                <td class="text-center align-middle">${item.decimalPlaces || ''}</td>
+                                <td class="text-center align-middle">${item.negativeFormat || ''}</td>
                             </tr>`;
                         });
 

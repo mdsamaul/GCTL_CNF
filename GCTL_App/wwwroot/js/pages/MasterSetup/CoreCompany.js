@@ -218,7 +218,7 @@ function LoadAllCompany(page = 1, pageSizeVal = pageSize, sortColumn = currentSo
 
                         </td>
                         <td class="align-middle">${item.companyName || ''}</td>
-                        <td class="align-middle">${item.companyShortName || ''}</td>
+                        <td class="text-center text-middle">${item.companyShortName || ''}</td>
                         <td class="align-middle">${item.address1 || ''}</td>
                     </tr>`;
                 });

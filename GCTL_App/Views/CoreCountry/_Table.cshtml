@@ -1,68 +1,102 @@
-﻿<div class="card table-card mb-0">
-    <div class="card-header">
-        <div class="row g-3 justify-content-between align-items-end">
-            <div class="col-12 col-sm-auto">
-                <div class="dropdown me-3">
-                    <button class="btn btn-phoenix-secondary dropdown-toggle" type="button" id="country-pageSizeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        Showing: <span id="country-selectedPageSize">10</span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="pageSizeDropdown">
-                        <li><a class="dropdown-item country-dropdown-item" href="#" data-size="10">10</a></li>
-                        <li><a class="dropdown-item country-dropdown-item" href="#" data-size="25">25</a></li>
-                        <li><a class="dropdown-item country-dropdown-item" href="#" data-size="50">50</a></li>
-                        <li><a class="dropdown-item country-dropdown-item" href="#" data-size="100">100</a></li>
-                        <li><a class="dropdown-item country-dropdown-item" href="#" data-size="-1">All</a></li>
-                    </ul>
-                </div>
-            </div>         
+﻿@model GCTL.Core.ViewModels.MasterSetup.CoreCountries.CoreCountryViewModel
 
-            <div class="col-8 col-sm-auto">
-                <div class="d-flex align-items-center">
-                    <div class="" id="country-searchBox">
-                        <form class="position-relative" id="country-searchForm">
-                            <input class="form-control search-input search ps-4" id="country-searchInput" type="search" placeholder="Search here" aria-label="Search" />
-                            <div class="position-absolute top-0 start-0 h-100 d-flex justify-content-center align-items-center ps-1"><span class="fas fa-search search-box-icon"></span></div>
-                        </form>
+<div class="d-flex flex-column h-100">
+    <div class="card shadow rounded-2 flex-grow-1 d-flex">
+
+        <!-- Card Header -->
+        <div class="card-header bg-light rounded-top-2">
+            <div class="row align-items-center">
+                <!-- Page Size -->
+                <div class="col-md-6 d-flex align-items-center mb-2 mb-md-0">
+                    <label class="me-2 mb-0">Show</label>
+                    <select id="country-pageSize" class="form-select form-select-sm me-2 pageSize" style="max-width: 100px;">
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="-1">All</option>
+                    </select>
+                    <label class="mb-0">Entries</label>
+                </div>
+
+                <!-- Search -->
+                <div class="col-md-6 d-flex justify-content-md-end">
+                    <input type="text"
+                           id="country-searchInput"
+                           class="form-control form-control-sm searchInput"
+                           style="max-width: 300px;"
+                           placeholder="Search...">
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Body - Table -->
+        <div class="card-body p-2 flex-grow-1 d-flex flex-column">
+            <div class="table-responsive flex-grow-1" style="overflow-y: auto; max-height: 600px;">
+                <table class="table table-hover table-sm table-bordered mb-0" id="countryTable">
+                    <thead class="table-light align-middle text-nowrap sticky-top" style="font-size: 0.8rem;">
+                        <tr>
+                            <th class="text-center text-middle" style="width: 5%;">
+                                <input type="checkbox" id="country-check-all" class="form-check-input">
+                            </th>
+                            <th class="country-sort text-center text-middle sortable"
+                                data-sort="CountryCode" style="width: 8%;">
+                                ID <i class="sort-icon fas fa-sort"></i>
+                            </th>
+                            <th class="country-sort text-center text-middle sortable"
+                                data-sort="CountryName" style="width: 45%;">
+                                Country Name <i class="sort-icon fas fa-sort"></i>
+                            </th>
+                            <th class="country-sort text-center text-middle sortable"
+                                data-sort="Ioccode" style="width: 25%;">
+                                IOC Code <i class="sort-icon fas fa-sort"></i>
+                            </th>
+                            <th class="country-sort text-center text-middle sortable"
+                                data-sort="Isocode" style="width: 17.5%;">
+                                ISO Code <i class="sort-icon fas fa-sort"></i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="country-table-body">
+                        <tr class="no-data">
+                            <td colspan="5" class="text-center py-4">No data available</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Card Footer - Pagination -->
+        <div class="card-footer bg-light">
+            <div class="row align-items-center mb-2">
+                <div class="col-4">
+                    <span id="country-paginationInfo" class="text-muted" style="font-size: 0.8rem;"></span>
+                </div>
+                <div class="col-4 text-center">
+                    <span id="country-paginationSummary" class="text-primary fw-semibold" style="font-size: 0.8rem;"></span>
+                </div>
+                <div class="col-4 text-end">
+                    <span id="country-totalRecords" class="text-muted" style="font-size: 0.8rem;"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="btn-group">
+                        <button id="country-firstPage" class="btn btn-outline-primary btn-sm">First</button>
+                        <button id="country-prevPageBtn" class="btn btn-outline-primary btn-sm">Previous</button>
+                    </div>
+
+                    <ul id="country-paginationLinks" class="pagination justify-content-center d-inline-flex mx-2 mb-0">
+                        <!-- Dynamic page numbers will be inserted by JS -->
+                    </ul>
+
+                    <div class="btn-group">
+                        <button id="country-nextPageBtn" class="btn btn-outline-primary btn-sm">Next</button>
+                        <button id="country-lastPage" class="btn btn-outline-primary btn-sm">Last</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="card-body">
-        <div>
-            <table class="table fs-9 mb-0 border-top border-translucent table-striped" style="vertical-align: middle; text-align: center;">
-                <thead>
-                    <tr>
-                        <th class="text-center text-middle align-middle ps-2" scope="col" style="width: 5%; padding-left: 0;">
-                           
-                            <input type="checkbox" id="country-check-all" />
-                        </th>
-                        <th class="country-sort align-middle ps-2" scope="col" data-sort="CountryCode" style="padding-left: 0.5rem;">Country ID</th>
-                        <th class="country-sort white-space-nowrap align-middle ps-0" scope="col" data-sort="CountryName" style="padding-left: 0; white-space: nowrap;">Country Name</th>
-                        <th class="country-sort white-space-nowrap align-middle ps-0" scope="col" data-sort="Ioccode" style="padding-left: 0; white-space: nowrap;">IOC Code</th>
-                        <th class="country-sort white-space-nowrap align-middle ps-0" scope="col" data-sort="Isocode" style="padding-left: 0; white-space: nowrap;">ISO Code</th>
-                    </tr>
-                </thead>
-                <tbody class="list" id="country-table-body">
-                    <tr class="no-data">
-                        <td colspan="6" class="text-center">No data available</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="country-pagination-footer d-flex flex-wrap align-items-center justify-content-between py-2 pe-0 fs-9 border-translucent">
-        <div class="d-flex">
-            <p class="ps-3 mb-0 d-none d-sm-block me-3 fw-semibold text-body" id="country-paginationInfo"></p>
-            <p class="mb-0 d-none d-sm-block me-3 fw-semibold text-body" data-list-info="data-list-info"></p>
-        </div>
-        <div class="d-flex">
-            <button class="page-link" data-list-pagination="prev" id="country-prevPageBtn"><span class="fas fa-chevron-left"></span></button>
-            <ul class="mb-0 pagination" id="country-paginationLinks"></ul>
-            <button class="page-link pe-3" data-list-pagination="next" id="country-nextPageBtn"><span class="fas fa-chevron-right"></span></button>
-        </div>
-    </div>
-
-</div> 
+</div>

@@ -124,9 +124,9 @@ function LoadDepartmentList(page = 1, pageSizeVal = pageSize, sortColumn = curre
                             </button>
                         </td>
                         <td class="align-middle">${item.departmentName || ''}</td>
-                        <td class="align-middle">${item.departmentShortName || ''}</td>
-                        <td class="align-middle">${item.banglaDepartment || ''}</td>
-                        <td class="align-middle">${item.BanglaShortName || ''}</td>
+                        <td class="text-center text-middle">${item.departmentShortName || ''}</td>
+                        <td class="text-center text-middlee">${item.banglaDepartment || ''}</td>
+                        <td class="text-center text-middle">${item.BanglaShortName || ''}</td>
                     </tr>`;
                 });
             }
