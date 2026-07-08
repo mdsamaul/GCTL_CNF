@@ -11,9 +11,15 @@ namespace GCTL.Core.ViewModels.ClearAndF.Update
         public int Id { get; set; }
         public string JobNo { get; set; }
         public string ShipmentMode { get; set; }
-        public string JobDate { get; set; }         // formatted as "yyyy-MM-dd"
+        public DateTime? JobDate { get; set; }         // formatted as "yyyy-MM-dd"
         public string CustomerName { get; set; }
-        public string? DocReceivedDate { get; set; } // can be null, formatted "yyyy-MM-dd"
+        public DateTime? DocReceivedDate { get; set; } // can be null, formatted "yyyy-MM-dd"
+        public string CustomerId { get; set; }
+        public string ShipmentModeId { get; set; }
+        public string JobDateText { get; set; }
+        public string DocReceivedDateText { get; set; }
+        public string JobDateFormatted { get; set; }
+        public string DocReceivedDateFormatted { get; set; }
     }
 
     public class SepPagedResult<T>

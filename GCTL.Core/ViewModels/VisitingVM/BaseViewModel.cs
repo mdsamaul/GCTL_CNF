@@ -1,6 +1,7 @@
 ﻿using GCTL.Core.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,8 +16,11 @@ namespace GCTL.Core.ViewModels
         public string Message { get; set; } = string.Empty;
 
         // Audit
-        //public DateTime? CreatedAt { get; set; }
-      //  public DateTime? UpdatedAt { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime? CreatedAt { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime? UpdatedAt { get; set; }
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
         //public bool? IsDeleted { get; set; }

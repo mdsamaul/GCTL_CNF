@@ -43,9 +43,9 @@ namespace GCTL.Service.BillService
                     Id = Convert.ToInt16(h.TC),
                     JobNo = h.JobNo,
                     ShipmentMode = _shipmentModeRepository.All().Where(e => e.ExpenseTypeID == h.ExpenseTypeID).Select(e => e.ExpenseType).FirstOrDefault() ?? "",
-                    JobDate = h.Date.Value.ToString("dd/MM/yyyy"),
+                    JobDate = h.Date,
                     CustomerName = _customerRepository.All().Where(e => e.CustomerID == h.CustomerID).Select(e => e.CustomerName).FirstOrDefault() ?? "",
-                    DocReceivedDate = h.DocReceivedDate.Value.ToString("dd/MM/yyyy")
+                    DocReceivedDate = h.DocReceivedDate
                 }).AsNoTracking();
 
 
@@ -61,10 +61,10 @@ namespace GCTL.Service.BillService
                     query = query.Where(j => j.ShipmentMode == shipmentMode);
 
                 if (DateTime.TryParse(dateFrom, out var fromDate))
-                    query = query.Where(j => DateTime.Parse(j.JobDate) >= fromDate);
+                    query = query.Where(j => j.JobDate >= fromDate);
 
                 if (DateTime.TryParse(dateTo, out var toDate))
-                    query = query.Where(j => DateTime.Parse(j.JobDate) <= toDate.AddDays(1).AddTicks(-1)); // include full day
+                    query = query.Where(j => j.JobDate <= toDate.AddDays(1).AddTicks(-1)); // include full day
 
                 if (!string.IsNullOrWhiteSpace(search))
                 {

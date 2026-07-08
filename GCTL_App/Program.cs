@@ -1,15 +1,16 @@
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using GCTL.Core.ViewModels.MasterSetup.ServiceType;
 using GCTL.Data.Models;
-using GCTL.Service.AccessPermissions;
 using GCTL.Service;
+using GCTL.Service.AccessPermissions;
+using GCTL.Service.ActionLogAudit;
+using GCTL.Service.AdminSettings.GeneralSettings;
+using GCTL.Service.RolePermissions;
+using GCTL.Service.VisitingPath;
+using GCTL_App.EmailServicesMethod;
 using GCTL_App.Extensions;
 using Microsoft.AspNetCore.Identity;
-using GCTL.Service.ActionLogAudit;
-using GCTL.Service.VisitingPath;
-using GCTL.Service.RolePermissions;
-using GCTL_App.EmailServicesMethod;
 using QuestPDF.Infrastructure;
-using GCTL.Service.AdminSettings.GeneralSettings;
-using GCTL.Core.ViewModels.MasterSetup.ServiceType;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +63,10 @@ builder.Services.AddAuthentication(options =>
     options.Cookie.SecurePolicy = CookieSecurePolicy.None;  // Make sure cookies are secure
     options.SessionStore = new MemoryCacheTicketStore();
 
+});
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new GCTL_App.Converters.DateTimeConverter());
 });
 
 builder.Services.AddScoped<PermissionService>();
