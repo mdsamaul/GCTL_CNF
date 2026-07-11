@@ -149,7 +149,7 @@ namespace GCTL_App.Controllers.OFRAdjustApproval
             try
             {
                 int? currentUser = await GetCurrentEmployeeIdAsync();
-                var data = await _service.GetDetailsWithCashBank(jobNo,currentUser);
+                var data = await _service.GetDetailsWithCashBank(jobNo, currentUser);
 
                 if (data == null) data = new List<OFRAdjustApprovalDetailsVM>();
 

@@ -27,5 +27,9 @@ namespace GCTL.Service.OFRBillAdjust
         #region Get All Requisition for Bottom Grid
         Task<PaginationService<OFRBillAdjustBottomGridVM, OFRBillAdjustBottomGridVM>.PaginationResult<OFRBillAdjustBottomGridVM>> GetBottomGrid(int pageNumber = 1, int pageSize = 5, string searchTerm = "", string sortColumn = "JobNo", string sortOrder = "desc");
         #endregion
+
+        #region Get All Job Requisition Entry in Top Grid
+        Task<PaginationService<OFRApprovalTopGridVM, OFRApprovalTopGridVM>.PaginationResult<OFRApprovalTopGridVM>> GetAllRequisition(int pageNumber = 1, int pageSize = 5, string searchTerm = "", string sortColumn = "JobNo", string sortOrder = "desc", string customerid = "", string shipmentmodeid = "");
+        #endregion
     }
 }

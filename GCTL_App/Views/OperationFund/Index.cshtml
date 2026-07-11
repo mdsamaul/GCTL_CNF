@@ -6,127 +6,132 @@
 } *@
 
 <style>
-        .card-header {
-            min-height: 50px;
-        }
+    .card-header {
+        min-height: 50px;
+    }
 
-        .dataTables_wrapper .dataTables_filter input {
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            padding: 0px;
-        }
-        /* Remove padding, margin, border, background, and hover effects */
-        .dataTables_wrapper .dataTables_paginate .paginate_button {
-            padding: 0 !important;
-            margin: 0 !important;
-            border: none !important;
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        padding: 0px;
+    }
+    /* Remove padding, margin, border, background, and hover effects */
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        color: inherit !important;
+        box-shadow: none !important;
+    }
+
+        /* Remove selected page button styling */
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
             background: transparent !important;
             color: inherit !important;
-            box-shadow: none !important;
+            font-weight: normal !important;
+            border: none !important;
         }
 
-            /* Remove selected page button styling */
-            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-                background: transparent !important;
-                color: inherit !important;
-                font-weight: normal !important;
-                border: none !important;
+        /* Remove hover effect */
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: transparent !important;
+            color: inherit !important;
+        }
+
+
+    #employee-filter-grid tbody tr td:first-child {
+        width: 5%;
+        padding: 0;
+    }
+
+    #employee-filter-grid thead th:first-child {
+        width: 5%;
+    }
+
+    th.no-sort::after,
+    th.no-sort::before {
+        display: none !important;
+    }
+
+    .single-row-form .row {
+        flex-wrap: nowrap !important;
+    }
+
+    .single-row-form .col-equal {
+        flex: 1;
+        min-width: 0;
+        max-width: none;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .single-row-form .label-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.5rem;
+        padding: 0.25rem;
+    }
+
+    .single-row-form .form-label {
+        margin: 0;
+        font-size: 0.875rem;
+        text-align: start;
+        word-wrap: break-word;
+        hyphens: auto;
+    }
+
+    .single-row-form .form-control,
+    .single-row-form .form-select {
+        flex: 1;
+    }
+
+
+    .custom-fieldset {
+        position: relative;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        padding: 30px 20px 20px 20px;
+        margin: 20px 0;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+        .custom-fieldset legend {
+            position: absolute;
+            top: -14px;
+            left: 20px;
+            background-color: white;
+            padding: 0 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #727272;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: auto;
+        }
+
+        .custom-fieldset input[type="submit"] {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #fff;
+            border: 2px solid #333;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+            .custom-fieldset input[type="submit"]:hover {
+                background-color: #45a049;
+                border-color: #45a049;
             }
 
-            /* Remove hover effect */
-            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-                background: transparent !important;
-                color: inherit !important;
-            }
-
-
-        #employee-filter-grid tbody tr td:first-child {
-            width: 5%;
-            padding: 0;
-        }
-
-        #employee-filter-grid thead th:first-child {
-            width: 5%;
-        }
-
-        th.no-sort::after,
-        th.no-sort::before {
-            display: none !important;
-        }
-
-        .single-row-form .row {
-            flex-wrap: nowrap !important;
-        }
-
-        .single-row-form .col-equal {
-            flex: 1;
-            min-width: 0;
-            max-width: none;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .single-row-form .label-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 0.5rem;
-            padding: 0.25rem;
-        }
-
-        .single-row-form .form-label {
-            margin: 0;
-            font-size: 0.875rem;
-            text-align: start;
-            word-wrap: break-word;
-            hyphens: auto;
-        }
-
-        .single-row-form .form-control,
-        .single-row-form .form-select {
-            flex: 1;
-        }
-
-
-        .custom-fieldset {
-            position: relative;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            padding: 30px 20px 20px 20px;
-            margin: 20px 0;
-            box-shadow: 0 0 10px rgba(76, 175, 80, 0.2);
-        }
-
-            .custom-fieldset legend {
-                position: absolute;
-                top: -14px;
-                left: 20px;
-                background-color: white;
-                padding: 0 10px;
-                font-size: 1.2em;
-                font-weight: bold;
-                color: #727272;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                width: auto;
-            }
-
-            .custom-fieldset input[type="submit"] {
-                margin-top: 15px;
-                padding: 10px 20px;
-                background-color: #fff;
-                border: 2px solid #333;
-                border-radius: 5px;
-                color: white;
-                font-weight: bold;
-                cursor: pointer;
-            }
-
-                .custom-fieldset input[type="submit"]:hover {
-                    background-color: #45a049;
-                    border-color: #45a049;
-                }
-
+    .sticky-bar {
+        position: sticky;
+        top: 65px;
+        z-index: 1020;
+    }
 </style>
 
 <div class="container-fluid">
@@ -141,7 +146,7 @@
     </fieldset>
 
     <fieldset class="custom-fieldset card">
-        <partial name="_Setup"></partial>
+        <partial name="_Setup" />
     </fieldset>
 
     @* <fieldset class="custom-fieldset card">
@@ -152,7 +157,7 @@
             <partial name="_nonInvGrid"></partial>
         </div> *@
         <fieldset class="custom-fieldset card">
-            <partial name="_nonInvGrid"></partial>
+            <partial name="_nonInvGrid" />
         </fieldset>
     </div>
 </div>

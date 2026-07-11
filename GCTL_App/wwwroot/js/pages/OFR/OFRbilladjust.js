@@ -33,7 +33,7 @@ let BottomSortOrder = "desc";
 //#region Load Requisition Entry List for Top Grid for Bill Adjust UI
 function RequisitionListForBilUI() {
     $.ajax({
-        url: '/OFRApproval/GetAllRequisitionList',
+        url: '/OFRBillAdjust/GetAllRequisitionList',
         type: 'GET',
         data: {
             pageNumber: BillPageNumber,
@@ -644,7 +644,7 @@ function ClearBillAdjustForm() {
     $("#BillAdjust-ReqNo,#BillAdjust-JobNo,#BillAdjust-Cutomer,#BillAdjust-invoiceNo,#BillAdjust-Qty,#BillAdjust-ReqDate,#BillAdjust-Shipment,#BillAdjust-LCValue,#BillAdjust-MatDescription,#BillAdjust-Weight, #BillAdjust-Search, #Appro-SearchInput, #BillAdjust-Port, #BillAdjust-DutyChalan, #BillAdjust-Asycoda, #BillAdjust-Shipping").val("");
     ClearTmpDetail();
     RequisitionListForBilUI();
-//    BottomGrid();
+    //    BottomGrid();
 }
 //#endregion
 
@@ -691,7 +691,7 @@ $(document).on('click', 'input[name="AdjustSelect"]', function () {
                 $("#BillAdjust-MatDescription").val(data.materialDescription);
                 $("#BillAdjust-Qty").val(data.quantity);
                 $("#BillAdjust-Weight").val(data.weight);
-    
+
                 TmpDetailsLoad();
 
             },

@@ -94,7 +94,7 @@ namespace GCTL.Service.OFRBillAdjust
                 ExpenseHeadID = d.ExpenseHeadID,
                 ServiceTypeID = d.ServiceTypeID,
                 EstimatedAmount = d.EstimatedAmount,
-                ActualAmount = d.ActualAmount,                
+                ActualAmount = d.ActualAmount,
                 DifferentAmount = d.DifferentAmount,
                 BillAdjustAmount = d.BillAdjustAmount,
                 LUser = currentUserId?.ToString(),
@@ -127,7 +127,7 @@ namespace GCTL.Service.OFRBillAdjust
                               on tmp.ServiceTypeID equals serv.ServiceTypeID
                               into servicJoin
                                 from servic in servicJoin.DefaultIfEmpty()
-                                where tmp.LUser == currentUser.ToString() 
+                                where tmp.LUser == currentUser.ToString()
                                 orderby tmp.TC
 
                                 select new OFRBillAdjustDetailsVM
@@ -242,6 +242,10 @@ namespace GCTL.Service.OFRBillAdjust
                             on doc.CustomerID equals cust.CustomerID
                         join exp in _shipmentmode.All()
                             on main.ExpenseTypeID equals exp.ExpenseTypeID
+                        where _details.All().Where(det => det.OFRNo == main.OFRNo)
+                                .All(det => string.IsNullOrWhiteSpace(det.AdjustUser))
+                        //where _details.All().Any(det => det.OFRNo == main.OFRNo
+                        //                        && !string.IsNullOrWhiteSpace(det.AdjustUser))
                         select new OFRBillAdjustBottomGridVM
                         {
                             TC = main.TC,
@@ -270,6 +274,68 @@ namespace GCTL.Service.OFRBillAdjust
             return paginatedResult;
         }
 
+        #endregion
+
+        #region Get All Requisition Entry in Top Grid
+        public async Task<PaginationService<OFRApprovalTopGridVM, OFRApprovalTopGridVM>.PaginationResult<OFRApprovalTopGridVM>> GetAllRequisition(int pageNumber = 1, int pageSize = 5, string searchTerm = "", string sortColumn = "JobNo", string sortOrder = "desc", string customerid = "", string shipmentmodeid = "")
+        {
+            var query = from main in _repository.All()
+                        join doc in _documentation.All()
+                            on main.JobNo equals doc.JobNo
+                        join cust in _customer.All()
+                            on doc.CustomerID equals cust.CustomerID
+                        join exp in _shipmentmode.All()
+                            on main.ExpenseTypeID equals exp.ExpenseTypeID
+                        where _details.All().Any(det => det.OFRNo == main.OFRNo
+                                                    && string.IsNullOrWhiteSpace(det.AdjustUser))
+                        select new OFRApprovalTopGridVM
+                        {
+                            TC = main.TC,
+                            JobNo = main.JobNo,
+                            CustomerID = cust.CustomerID,
+                            CustomerName = cust.CustomerName,
+                            ShipmentModeID = exp.ExpenseTypeID,
+                            ShipmentMode = exp.ExpenseType
+                        };
+            //Filtering with Customer ID
+            int totalCount = 0;
+            totalCount = await query.CountAsync();
+            bool changed = false;
+
+            if (!string.IsNullOrEmpty(customerid))
+            {
+                query = query.Where(x => x.CustomerID == customerid);
+                changed = true;
+            }
+
+            if (!string.IsNullOrEmpty(shipmentmodeid))
+            {
+                query = query.Where(x => x.ShipmentModeID == shipmentmodeid);
+                changed = true;
+            }
+
+            if (pageSize == -1)
+            {
+                pageSize = await query.CountAsync();
+                pageNumber = 1;
+            }
+
+            // PaginationService
+            var paginatedResult = await PaginationService<OFRApprovalTopGridVM, OFRApprovalTopGridVM>.GetPaginatedData(query, pageNumber, pageSize, searchTerm, sortColumn, sortOrder,
+                    term => sc =>
+                        EF.Functions.Like(sc.JobNo ?? "", $"%{term}%") ||
+                        EF.Functions.Like(sc.CustomerName ?? "", $"%{term}%") ||
+                        EF.Functions.Like(sc.ShipmentMode ?? "", $"%{term}%"),
+                    ob => ob
+             );
+
+            if (changed)
+            {
+                paginatedResult.TotalCount = totalCount;
+            }
+
+            return paginatedResult;
+        }
         #endregion
 
         #region When click Edit Button

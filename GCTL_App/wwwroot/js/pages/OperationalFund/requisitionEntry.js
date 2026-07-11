@@ -56,7 +56,7 @@ function LoadRequisitionList() {
             $('#Requisition-body').html(rows);
 
             ReqPagination(res.totalCount);
-            ReqUpdatePagi(res.totalCount);
+            ReqUpdatePagi(res.filterCount, res.totalCount);
         }
     });
 }
@@ -84,7 +84,7 @@ function ReqPagination(totalCount) {
 
     // Always show first 2 pages
     for (let i = 1; i <= Math.min(2, totalPages); i++) {
-        pagination += pageItem(i, current);
+        pagination += billPageItem(i, current);
     }
 
     // Dots before middle
@@ -97,7 +97,7 @@ function ReqPagination(totalCount) {
     let end = Math.min(totalPages - 2, current + 1);
 
     for (let i = start; i <= end; i++) {
-        pagination += pageItem(i, current);
+        pagination += billPageItem(i, current);
     }
 
     // Dots after middle
@@ -107,7 +107,7 @@ function ReqPagination(totalCount) {
 
     // Always show last 2 pages
     for (let i = Math.max(totalPages - 1, 3); i <= totalPages; i++) {
-        pagination += pageItem(i, current);
+        pagination += billPageItem(i, current);
     }
 
     // Next
@@ -120,7 +120,7 @@ function ReqPagination(totalCount) {
 }
 
 // helper
-function pageItem(page, current) {
+function billPageItem(page, current) {
     return `
         <li class="page-item ${page === current ? 'active' : ''}">
             <a class="page-link" href="#" onclick="ReqchangePage(${page})">${page}</a>
@@ -135,19 +135,26 @@ function ReqchangePage(page) {
 //#endregion
 
 //#region Update Text
-function ReqUpdatePagi(totalCount) {
 
+function ReqUpdatePagi(filterCount, totalCount = null) {
     let pageSize = $('#Req-PageSize').val();
+    let searchTerm = $('#Req-Search').val();
 
+    let text;
     if (pageSize == -1) {
-        $('.Req-Pagination-message').text(`Showing 1 to ${totalCount} of ${totalCount} entries`);
-        return;
+        text = `Showing 1 to ${filterCount} of ${filterCount} entries`;
+    } else {
+        let start = ((ReqPageNumber - 1) * pageSize) + 1;
+        let end = Math.min(ReqPageNumber * pageSize, filterCount);
+
+        text = (`Showing ${start} to ${end} of ${filterCount} entries`);
     }
 
-    let start = ((ReqPageNumber - 1) * pageSize) + 1;
-    let end = Math.min(jobPageNumber * pageSize, totalCount);
+    if (searchTerm && totalCount && totalCount !== filterCount) {
+        text += ` (filtered from ${totalCount} total entries)`;
+    }
 
-    $('.Req-Pagination-message').text(`Showing ${start} to ${end} of ${totalCount} entries`);
+    $('.Req-Pagination-message').text(text);
 }
 //#endregion
 
@@ -171,7 +178,7 @@ $('#Req-PageSize').on('change', function () {
 //#endregion
 
 //#region Sorting
-$('.table thead th[data-column]').on('click', function () {
+$('#FundTable thead th[data-column]').on('click', function () {
 
     let column = $(this).data('column');
 
@@ -208,7 +215,7 @@ $('#Req-DeleteBtn').on('click', function () {
     let ofrNos = [];
 
     $('input[name="ReqSelect"]:checked').each(function () {
-        ofrNos.push($(this).val()); 
+        ofrNos.push($(this).val());
     });
 
     if (ofrNos.length === 0) {
@@ -285,7 +292,7 @@ function LoadRequisitionDetails(offrNo) {
             // Fill Requisition Date
             SetRequisitionDate(res.reqDate);
             //$('#Remark').val(res.remark ?? '');
-             
+
             // Set Choices dropdown values using instances
             //if (serviceTypeChoice) serviceTypeChoice.setChoiceByValue(res.serviceTypeID);
             // Load Account Head AFTER service type is set
@@ -316,7 +323,7 @@ $(document).ready(function () {
         let ofrNo = $(this).text().trim();
         //    LoadRequisitionDetails(ofrNo);
         copyToTmp(ofrNo).done(function () {
-           //load requisition details
+            //load requisition details
             LoadRequisitionDetails(ofrNo);
             loadTmpDetails();
         }).fail(function () {

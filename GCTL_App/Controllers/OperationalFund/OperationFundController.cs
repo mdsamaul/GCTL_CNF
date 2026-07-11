@@ -2,12 +2,15 @@
 using GCTL.Service.Language;
 using GCTL.Service.OperationalFund;
 using GCTL.Service.UserProfile;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GCTL_App.Controllers.OperationalFund
 {
+    [Authorize]
     public class OperationFundController : BaseController
     {
+
         #region Service
         private readonly Ioperational _service;
         public OperationFundController(ITranslateService translateService, IUserProfileService userProfileService, Ioperational service) : base(translateService, userProfileService)
@@ -75,7 +78,7 @@ namespace GCTL_App.Controllers.OperationalFund
         {
             if (string.IsNullOrEmpty(jobNo)) return BadRequest("JobNo is required");
 
-            var requisitionNo =await _service.GenerateRequisitionNoAsync(jobNo);
+            var requisitionNo = await _service.GenerateRequisitionNoAsync(jobNo);
             return Ok(new { requisitionNo });
         }
         #endregion
@@ -217,7 +220,7 @@ namespace GCTL_App.Controllers.OperationalFund
                 int? currentUserId = await GetCurrentEmployeeIdAsync();
                 var success = await _service.ClearTmp(currentUserId);
 
-                if (success)return Ok(new { message = "Data Deleted Successfully" });
+                if (success) return Ok(new { message = "Data Deleted Successfully" });
 
                 else return NotFound(new { message = "Data not found or not authorized" });
             }
@@ -305,7 +308,7 @@ namespace GCTL_App.Controllers.OperationalFund
         }
 
         [HttpPost]
-        public async Task<IActionResult> CopyToTmp([FromBody] string offrNo )
+        public async Task<IActionResult> CopyToTmp([FromBody] string offrNo)
         {
             int? currentUserId = await GetCurrentEmployeeIdAsync();
             await _service.CopyDetailsToTmp(offrNo, currentUserId);

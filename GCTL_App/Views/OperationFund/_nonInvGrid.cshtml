@@ -53,7 +53,7 @@
         </div>
 
         <div class="table-responsive border rounded">
-            <table class="table table-sm table-bordered table-hover mb-0 text-nowrap">
+            <table class="table table-sm table-bordered table-hover mb-0 text-nowrap" id="FundTable">
                 <thead class="table-light sticky-top" style="z-index: 1;">
                     <tr class="align-middle">
                         <th class="text-center fw-bold py-1">
@@ -69,32 +69,32 @@
                                 <i class="fas fa-sort sort-icon ms-1"></i>
                             </div>
                         </th>
-                        <th class="px-1 fw-bold">
+                        <th class="px-1 fw-bold" data-column="OFRDate">
                             <div class="d-flex align-items-center justify-content-center">
                                 <span>OFR Date</span>
                                 <i class="fas fa-sort sort-icon ms-1"></i>
                             </div>
                         </th>
 
-                        <th class="px-1 fw-bold">
+                        <th class="px-1 fw-bold" data-column="JobNo">
                             <div class="d-flex align-items-center justify-content-center">
                                 <span>Job No</span>
                                 <i class="fas fa-sort sort-icon ms-1"></i>
                             </div>
                         </th>
-                        <th class="px-1 fw-bold">
+                        <th class="px-1 fw-bold" data-column="CustomerName">
                             <div class="d-flex align-items-center justify-content-center">
                                 <span>Customer Name</span>
                                 <i class="fas fa-sort sort-icon ms-1"></i>
                             </div>
                         </th>
-                        <th class="px-1 fw-bold">
+                        <th class="px-1 fw-bold" data-column="BillingAddress">
                             <div class="d-flex align-items-center justify-content-start">
                                 <span>Billing Address</span>
                                 <i class="fas fa-sort sort-icon ms-1"></i>
                             </div>
                         </th>
-                        <th class="px-1 fw-bold">
+                        <th class="px-1 fw-bold" data-column="ShipmentMode">
                             <div class="d-flex align-items-center justify-content-center">
                                 <span>Shipment Mode</span>
                                 <i class="fas fa-sort sort-icon ms-1"></i>
@@ -114,7 +114,6 @@
             <div class="col-sm-6">
                 <nav aria-label="Page navigation">
                     <ul class="pagination pagination-sm mb-0 justify-content-center justify-content-sm-end" id="Req-Pagination">
-
                     </ul>
                 </nav>
             </div>

@@ -833,7 +833,7 @@ function loadBankAccounts($cashBankSelect, selectedBank = null) {
             // Auto-select Bank Account if provided
             if (selectedBank) {
                 $bankSelect.val(selectedBank);
-            } 
+            }
             else if (value === '10200400001' && res.length > 0) {
                 $bankSelect.val(res[0].value);
             }

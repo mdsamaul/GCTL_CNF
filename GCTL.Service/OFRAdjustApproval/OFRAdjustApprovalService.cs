@@ -145,7 +145,7 @@ namespace GCTL.Service.OFRAdjustApproval
                         {
                             OFRNo = ofr.OFRNo,
                             JobNo = ofr.JobNo,
-                            OFRDate = ofr.OFRDate,                            
+                            OFRDate = ofr.OFRDate,
                             CustomerID = cust.CustomerID,
                             CustomerName = cust.CustomerName ?? "",
                             InvoiceNo = doc.InvoiceNo,
@@ -223,7 +223,7 @@ namespace GCTL.Service.OFRAdjustApproval
                                     AdjustAmount = tmp.BillAdjustAmount,
                                     DiffentAmount = tmp.DifferentAmount,
                                     Remark = tmp.ExpenseHeadRemarks,
-                                    CashBank = ofrDet.AdjustDetailsCashBank,   
+                                    CashBank = ofrDet.AdjustDetailsCashBank,
                                     BankAccount = ofrDet.AdjustDetailsBankAccount
                                 }).ToListAsync();
 
@@ -267,7 +267,7 @@ namespace GCTL.Service.OFRAdjustApproval
         #region Approval  Adjust Amount Update
         public async Task<bool> SaveAdjustApprovalAsync(List<OFRAdjustApprovalDetailsSaveVM> model, int? Approveduser)
         {
-            if (model == null || !model.Any())  return false;
+            if (model == null || !model.Any()) return false;
 
             await _repository.BeginTransactionAsync();
 
@@ -275,7 +275,7 @@ namespace GCTL.Service.OFRAdjustApproval
             {
                 string ofrNo = model.First().OFRNo;
 
-                  // ENTRY (HEADER) UPDATE
+                // ENTRY (HEADER) UPDATE
                 var entry = await _repository.All().FirstOrDefaultAsync(x => x.OFRNo == ofrNo);
 
                 if (entry == null) throw new Exception("OFR Entry not found");
@@ -287,12 +287,12 @@ namespace GCTL.Service.OFRAdjustApproval
 
                 await _repository.UpdateAsync(entry);
 
-                   //DETAILS UPDATE (ROW-WISE)
+                //DETAILS UPDATE (ROW-WISE)
                 foreach (var item in model)
                 {
-                    var details = await _details.All().FirstOrDefaultAsync(x =>x.OFR_DetailsID == item.OFR_DetailsID && x.OFRNo == ofrNo);
+                    var details = await _details.All().FirstOrDefaultAsync(x => x.OFR_DetailsID == item.OFR_DetailsID && x.OFRNo == ofrNo);
 
-                    if (details == null)  throw new Exception($"Details not found: {item.OFR_DetailsID}");
+                    if (details == null) throw new Exception($"Details not found: {item.OFR_DetailsID}");
 
                     details.AdjustApprovalAmount = item.ConfirmAmount;
                     details.DifferentAmount2 = item.DifferentAmount;
@@ -304,7 +304,7 @@ namespace GCTL.Service.OFRAdjustApproval
                     await _details.UpdateAsync(details);
                 }
 
-                   //TEMP DATA CLEANUP
+                //TEMP DATA CLEANUP
                 var tmpToDelete = await _Tmpdetails.All().Where(x => x.OFRNo == ofrNo && x.LUser == Approveduser.ToString()).ToListAsync();
 
                 foreach (var tmp in tmpToDelete)

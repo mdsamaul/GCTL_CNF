@@ -123,6 +123,41 @@ namespace GCTL_App.Controllers.OFRBillAdjust
         }
         #endregion
 
+        #region Get All Requisition List for Top Grid
+        public async Task<IActionResult> GetAllRequisitionList(int pageNumber = 1, int pageSize = 5, string searchTerm = "", string sortColumn = "JobNo", string sortOrder = "desc", string customerid = "", string shipmentmodeid = "")
+        {
+            try
+            {
+                var result = await _service.GetAllRequisition(pageNumber, pageSize, searchTerm, sortColumn, sortOrder, customerid, shipmentmodeid);
+
+                if (result.Data == null || !result.Data.Any())
+                {
+                    return Ok(new
+                    {
+                        Data = new List<OFRApprovalTopGridVM>(),
+                        TotalCount = 0,
+                        PaginationInfo = new
+                        {
+                            StartItem = 0,
+                            EndItem = 0,
+                            TotalItems = 0,
+                            PageNumbers = new List<int>(),
+                            TotalPages = 0,
+                            CurrentPage = 0
+                        },
+                        Message = "No Job Found."
+                    });
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An Error Occurred.", error = ex.Message });
+            }
+        }
+        #endregion
+
         #region Get All Requisition List for Bottom Grid
         public async Task<IActionResult> GetAllRequisitionForBottomGrid(int pageNumber = 1, int pageSize = 5, string searchTerm = "", string sortColumn = "JobNo", string sortOrder = "desc")
         {

@@ -120,33 +120,34 @@ $(document).on('change', '#ServiceType', function () {
 
 //#region Load Job Entry List
 function loadJobEntryList() {
-        $.ajax({
-            url: '/OperationFund/GetAllJobList',
-            type: 'GET',
-            data: {
-                pageNumber: jobPageNumber,
-                pageSize: $('#Job-PageSize').val(),
-                searchTerm: $('#Job-SearchInput').val(),
-                sortColumn: jobSortColumn,
-                sortOrder: jobSortOrder,
-                customerid: $('#Customer').val(),
-                shipmentmodeid: $('#Job-ShipmentMode').val()
-            },
-            success: function (res) {
-                console.log("Job List :", res);
-                let rows = '';
+    console.log(jobPageNumber);
+    $.ajax({
+        url: '/OperationFund/GetAllJobList',
+        type: 'GET',
+        data: {
+            pageNumber: jobPageNumber,
+            pageSize: $('#Job-PageSize').val(),
+            searchTerm: $('#Job-SearchInput').val(),
+            sortColumn: jobSortColumn,
+            sortOrder: jobSortOrder,
+            customerid: $('#Customer').val(),
+            shipmentmodeid: $('#Job-ShipmentMode').val()
+        },
+        success: function (res) {
+            console.log("Job List :", res);
+            let rows = '';
 
-                if (!res.data || res.data.length === 0) {
-                    rows = `
+            if (!res.data || res.data.length === 0) {
+                rows = `
                         <tr>
                             <td colspan="6" class="text-center text-muted py-3">
                                 No data found
                             </td>
                         </tr>`;
-                } else {
+            } else {
 
-                    $.each(res.data, function (i, item) {
-                        rows += `
+                $.each(res.data, function (i, item) {
+                    rows += `
                             <tr>
                                 <td class="text-center">
                                     <input type="radio" class="form-check-input job-radio" name="jobSelect" value="${item.jobNo}">
@@ -157,16 +158,16 @@ function loadJobEntryList() {
                                 <td>${item.customer ?? ''}</td>
                                 <td class="text-center">${formatDate(item.docReceivedDate)}</td>
                             </tr>`;
-                    });
-                }
-
-                $('#Job-tbody').html(rows);
-
-                buildJobPagination(res.totalCount);
-                updateJobEntryInfo(res.totalCount);
+                });
             }
-        });
-    }
+
+            $('#Job-tbody').html(rows);
+
+            buildJobPagination(res.totalCount);
+            updateJobEntryInfo(res.filterCount, res.totalCount);
+        }
+    });
+}
 //#endregion
 
 
@@ -231,16 +232,17 @@ $(document).on('click', 'input[name="jobSelect"]', function () {
                 };
                 // Generate Requisition No
                 generateRequisitionNo(jobno).done(function (res) {
-                        if (res && res.requisitionNo) {
-                            $("#Job-RequisitionNo").val(res.requisitionNo);
-                        } else {
-                            $("#Job-RequisitionNo").val('');
-                            toastr.warning("Failed to generate Requisition No");
-                        }
-                    }).fail(function () {
+                    if (res && res.requisitionNo) {
+                        $("#Job-RequisitionNo").val(res.requisitionNo);
+                    } else {
                         $("#Job-RequisitionNo").val('');
-                        toastr.error("Error generating Requisition No");
-                    });
+                        toastr.warning("Failed to generate Requisition No");
+                    }
+                }).fail(function () {
+                    $("#Job-RequisitionNo").val('');
+                    toastr.error("Error generating Requisition No");
+                });
+                ClearTmpDetail();
             },
             error: function () {
                 console.error("Error loading header data", xhr);
@@ -340,19 +342,24 @@ function changeJobPage(page) {
 
 
 //#region Update Text
-function updateJobEntryInfo(totalCount) {
-
+function updateJobEntryInfo(filterCount, totalCount = null) {
     let pageSize = $('#Job-PageSize').val();
+    let searchTerm = $('#Job-SearchInput').val();
 
+    let text;
     if (pageSize == -1) {
-        $('.Job-Pagination-message').text(`Showing 1 to ${totalCount} of ${totalCount} entries`);
-        return;
+        text = `Showing 1 to ${filterCount} of ${filterCount} entries`;
+    } else {
+        let start = ((jobPageNumber - 1) * pageSize) + 1;
+        let end = Math.min(jobPageNumber * pageSize, filterCount);
+        text = `Showing ${start} to ${end} of ${filterCount} entries`;
     }
 
-    let start = ((jobPageNumber - 1) * pageSize) + 1;
-    let end = Math.min(jobPageNumber * pageSize, totalCount);
+    if (searchTerm && totalCount && totalCount !== filterCount) {
+        text += ` (filtered from ${totalCount} total entries)`;
+    }
 
-    $('.Job-Pagination-message').text(`Showing ${start} to ${end} of ${totalCount} entries`);
+    $('.Job-Pagination-message').text(text);
 }
 //#endregion
 
@@ -362,7 +369,7 @@ function updateJobEntryInfo(totalCount) {
 $('#Job-SearchInput').on('input', function () {
     jobPageNumber = 1;
     if ($(this).val() === '') {
-        loadJobEntryList(); 
+        loadJobEntryList();
     } else {
         loadJobEntryList();
     }
@@ -382,10 +389,10 @@ $('#Customer, #Job-ShipmentMode').on('change', function () {
 
 
 //#region Sorting
-$('.table thead th[data-column]').on('click', function () {
+$('#JobTable thead th[data-column]').on('click', function () {
 
     let column = $(this).data('column');
-
+    console.log(column);
     if (jobSortColumn === column) {
         jobSortOrder = jobSortOrder === 'asc' ? 'desc' : 'asc';
     } else {
@@ -419,7 +426,7 @@ $(document).ready(function () {
     InitDropdown('/OperationFund/GetCurenciesDD', '#Job-Currencies', 'Select C..');
 
     //Load list
-    loadJobEntryList(); 
+    loadJobEntryList();
 
 });
 //#endregion

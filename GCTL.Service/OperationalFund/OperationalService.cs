@@ -4,6 +4,7 @@ using GCTL.Data.Models;
 using GCTL.Service.ActionLogAudit;
 using GCTL.Service.Pagination;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -92,12 +93,41 @@ namespace GCTL.Service.OperationalFund
                 pageNumber = 1;
             }
 
-            // PaginationService
-            var paginatedResult = await PaginationService<JobEntryListVM, JobEntryListVM>.GetPaginatedData(query, pageNumber, pageSize, searchTerm, sortColumn, sortOrder,
-                    term => sc =>
-                        EF.Functions.Like(sc.JobNo ?? "", $"%{term}%"),
-                        sc => sc
-             );
+            DateTime? parsedSearchDate = null;
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var dateFormats = new[]
+                {
+                    "dd/MM/yyyy", "d/M/yyyy", "dd/M/yy",
+                    "dd-MM-yyyy", "d-M-yyyy", "dd-M-yy",
+                    "yyyy-MM-dd", "yyyy/M/d", "yy/M/dd",
+                    "yyyy/MM/dd", "yyyy-M-d", "yy-M-dd"
+                };
+
+                if (DateTime.TryParseExact(searchTerm, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var exactDate))
+                {
+                    parsedSearchDate = exactDate.Date;
+                }
+                else if (DateTime.TryParse(searchTerm, CultureInfo.InvariantCulture, DateTimeStyles.None, out var looseDate))
+                {
+                    parsedSearchDate = looseDate.Date;
+                }
+            }
+
+            var paginatedResult = await PaginationService<JobEntryListVM, JobEntryListVM>.GetPaginatedData(
+                query, pageNumber, pageSize, searchTerm, sortColumn, sortOrder,
+                term => sc =>
+                    EF.Functions.Like(sc.JobNo ?? "", $"%{term}%") ||
+                    EF.Functions.Like(sc.Customer ?? "", $"%{term}%") ||
+                    EF.Functions.Like(sc.ShipmentMode ?? "", $"%{term}%") ||
+
+                    // Exact-date match when the term parsed successfully as a date
+                    (parsedSearchDate.HasValue && sc.JobDate.HasValue && sc.JobDate.Value.Date == parsedSearchDate.Value) ||
+                    (parsedSearchDate.HasValue && sc.DocReceivedDate.HasValue && sc.DocReceivedDate.Value.Date == parsedSearchDate.Value),
+
+                sc => sc
+            );
 
             return paginatedResult;
         }
@@ -108,35 +138,35 @@ namespace GCTL.Service.OperationalFund
         public async Task<RequisitionHeaderVM> GetRequisitionHeaderAsync(string jobno)
         {
             var data = await (from d in _genericRepository.All()
-                                join c in _customer.All()
-                                    on d.CustomerID equals c.CustomerID into cc
-                                from c in cc.DefaultIfEmpty()
-                                join e in _shipmentmode.All()
-                                    on d.ExpenseTypeID equals e.ExpenseTypeID into ee
-                                from e in ee.DefaultIfEmpty()
+                              join c in _customer.All()
+                                  on d.CustomerID equals c.CustomerID into cc
+                              from c in cc.DefaultIfEmpty()
+                              join e in _shipmentmode.All()
+                                  on d.ExpenseTypeID equals e.ExpenseTypeID into ee
+                              from e in ee.DefaultIfEmpty()
 
-                              join curr in _currencies.All() 
+                              join curr in _currencies.All()
                                 on d.CurrencyId equals curr.CurrencyId into currs
                               from curr in currs.DefaultIfEmpty()
                               where d.JobNo == jobno
-                                select new RequisitionHeaderVM
-                                {
-                                    TC = d.TC,
-                                    JobNo = d.JobNo,
-                                    ShipmentModeID = e.ExpenseTypeID,
-                                    CustomerID = c.CustomerID,
-                                    ShipmentMode = e != null ? e.ExpenseType : "",
-                                    CustomerName = c != null ? c.CustomerName : "",
-                                    LcValue = d.LCValue,
-                                    InvoiceNo = d.InvoiceNo,
-                                    InvoiceValue = d.InvoiceValue,
-                                    HAWB = d.HAWB,
-                                    MaterialDescription = d.MaterialDescription,
-                                     Weight = d.Quntity2,
-                                     Qty = d.Quntity1,
-                                    CurrencyID = curr != null ? curr.CurrencyId : ""
+                              select new RequisitionHeaderVM
+                              {
+                                  TC = d.TC,
+                                  JobNo = d.JobNo,
+                                  ShipmentModeID = e.ExpenseTypeID,
+                                  CustomerID = c.CustomerID,
+                                  ShipmentMode = e != null ? e.ExpenseType : "",
+                                  CustomerName = c != null ? c.CustomerName : "",
+                                  LcValue = d.LCValue,
+                                  InvoiceNo = d.InvoiceNo,
+                                  InvoiceValue = d.InvoiceValue,
+                                  HAWB = d.HAWB,
+                                  MaterialDescription = d.MaterialDescription,
+                                  Weight = d.Quntity2,
+                                  Qty = d.Quntity1,
+                                  CurrencyID = curr != null ? curr.CurrencyId : ""
 
-                                }).FirstOrDefaultAsync();
+                              }).FirstOrDefaultAsync();
 
             return data;
         }
@@ -219,33 +249,32 @@ namespace GCTL.Service.OperationalFund
                             ShipmentMode = exp.ExpenseType
                         };
 
-
-            //var query = _repository.All()
-            //            .Select(main => new RequisitionVM
-            //            {
-            //                TC = main.TC,
-            //                OFRNo = main.OFRNo,
-            //                OFRDate = main.OFRDate,
-            //                JobNo = main.JobNo,
-            //                ShipmentMode = _shipmentmode.All()
-            //                                .Where(s => s.ExpenseTypeID == main.ExpenseTypeID)
-            //                                .Select(s => s.ExpenseType)
-            //                                .FirstOrDefault(),
-            //                CustomerName = _customer.All()
-            //                                .Where(c => c.EmployeeID == main.EmployeeID)
-            //                                .Select(c => c.CustomerName)
-            //                                .FirstOrDefault(),
-            //                BillingAddress = _customer.All()
-            //                                .Where(c => c.EmployeeID == main.EmployeeID)
-            //                                .Select(c => c.CustomerAddress)
-            //                                .FirstOrDefault()
-            //            }).AsQueryable();
-
-
             if (pageSize == -1)
             {
                 pageSize = await query.CountAsync();
                 pageNumber = 1;
+            }
+
+            DateTime? parsedSearchDate = null;
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var dateFormats = new[]
+                {
+                    "dd/MM/yyyy", "d/M/yyyy", "dd/M/yy",
+                    "dd-MM-yyyy", "d-M-yyyy", "dd-M-yy",
+                    "yyyy-MM-dd", "yyyy/M/d", "yy/M/dd",
+                    "yyyy/MM/dd", "yyyy-M-d", "yy-M-dd"
+                };
+
+                if (DateTime.TryParseExact(searchTerm, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var exactDate))
+                {
+                    parsedSearchDate = exactDate.Date;
+                }
+                else if (DateTime.TryParse(searchTerm, out var looseDate))
+                {
+                    parsedSearchDate = looseDate.Date;
+                }
             }
 
             // PaginationService
@@ -254,6 +283,8 @@ namespace GCTL.Service.OperationalFund
                         EF.Functions.Like(sc.OFRNo ?? "", $"%{term}%") ||
                         EF.Functions.Like(sc.JobNo ?? "", $"%{term}%") ||
                         EF.Functions.Like(sc.CustomerName ?? "", $"%{term}%") ||
+                        EF.Functions.Like(sc.BillingAddress ?? "", $"%{term}%") ||
+                        (parsedSearchDate.HasValue && sc.OFRDate.HasValue && sc.OFRDate.Value.Date == parsedSearchDate.Value) ||
                         EF.Functions.Like(sc.ShipmentMode ?? "", $"%{term}%"),
                     ob => ob
              );
@@ -276,7 +307,7 @@ namespace GCTL.Service.OperationalFund
             return typelist;
         }
         #endregion
-        
+
         #region Ship Mode Dropdown
         public async Task<IEnumerable<SelectListItem>> GetAllShipmentMode()
         {
@@ -381,7 +412,7 @@ namespace GCTL.Service.OperationalFund
                     LUser = model.CreatedBy.ToString(),
                     LIP = model.LIP,
                     LMAC = model.LMAC,
-                    CompanyCode ="",
+                    CompanyCode = "",
                     ExpenseHeadRemarks = model.Remark,
                     EmployeeID = model.CustomerNameID
                 };
@@ -661,6 +692,15 @@ namespace GCTL.Service.OperationalFund
                     }
                 }
 
+                // Find real detail rows for this OFR that no longer exist in tmp
+                var currentDetailIds = tmpDetails.Select(t => t.OFR_DetailsID).ToList(); // or your matching key
+                var detailsToRemove = await _details.All()
+                    .Where(d => d.OFRNo == ofrNo && !currentDetailIds.Contains(d.OFR_DetailsID))
+                    .ToListAsync();
+
+                if (detailsToRemove.Any())
+                    await _details.DeleteRangeAsync(detailsToRemove);
+
                 //Delete Tmp Details
                 await _Tmpdetails.DeleteRangeAsync(tmpDetails);
                 await _repository.CommitTransactionAsync();
@@ -750,7 +790,7 @@ namespace GCTL.Service.OperationalFund
                                   ShipmentModeID = req.ExpenseTypeID,
                                   //CustomerID = req.EmployeeID,
                                   ReqDate = req.OFRDate,
-                                  ReqNo = req.OFRNo,                              
+                                  ReqNo = req.OFRNo,
                                   Amount = det.EstimatedAmount,
                                   Remark = det.ExpenseHeadRemarks,
                                   CustomerName = cust.CustomerName,
@@ -781,6 +821,13 @@ namespace GCTL.Service.OperationalFund
 
             if (!details.Any()) return false;
 
+            var existingTmp = await _Tmpdetails.All()
+                .Where(x => x.LUser == currentUserId.ToString())
+                .ToListAsync();
+
+            if (existingTmp.Any())
+                await _Tmpdetails.DeleteRangeAsync(existingTmp);
+
             // Map to temporary table (use the Temp model)
             var tmpDetails = details.Select(d => new CF_OperationalFundRequisitionDetailsTemp
             {
@@ -802,7 +849,7 @@ namespace GCTL.Service.OperationalFund
                 ExpenseHeadRemarks = d.ExpenseHeadRemarks
             }).ToList();
 
-            await _Tmpdetails.AddRangeAsync(tmpDetails); 
+            await _Tmpdetails.AddRangeAsync(tmpDetails);
             return true;
         }
         #endregion

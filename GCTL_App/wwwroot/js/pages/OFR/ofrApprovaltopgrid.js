@@ -70,7 +70,7 @@ function loadRequisitionList() {
             $('#Appro-tbody').html(rows);
 
             buildJobPagination(res.totalCount);
-            updateJobEntryInfo(res.totalCount);
+            updateJobEntryInfo(res.filterCount, res.totalCount);
         }
     });
 }
@@ -138,7 +138,7 @@ function BottomGrid() {
             $('#bottom-selectAll').prop('checked', false);
 
             BottomPagination(res.totalCount);
-            updateBottomEntryInfo(res.totalCount);
+            updateBottomEntryInfo(res.filterCount, res.totalCount);
         }
     });
 }
@@ -322,6 +322,9 @@ $(document).on('change', '.cashbank-select', function () {
 function loadTmpDetails(jobNo) {
     $.get('/OFRApproval/GetAllTmpDetails', { jobNo: jobNo }, function (res) {
         const $tbody = $('#Tmp-TableBody');
+
+        console.log('Temp table Data : ', res);
+
         $tbody.html('');
 
         if (!res || res.length === 0) return;
@@ -616,7 +619,7 @@ $('#Approve-SaveBtn').on('click', function () {
     let approvalList = [];
 
     $('#Tmp-TableBody tr').each(function () {
-        let $tr = $(this); 
+        let $tr = $(this);
 
         let $amount = $tr.find('.approval-amount');
         if ($amount.length === 0) return;
@@ -758,19 +761,24 @@ function changeBottomPage(page) {
 //#endregion
 
 //#region Update Text
-function updateBottomEntryInfo(totalCount) {
-
+function updateBottomEntryInfo(filterCount, totalCount = null) {
     let pageSize = $('#bottom-PageSize').val();
+    let searchTerm = $('#bottom-Search').val();
 
+    let text;
     if (pageSize == -1) {
-        $('.bottom-message').text(`Showing 1 to ${totalCount} of ${totalCount} entries`);
-        return;
+        text = `Showing 1 to ${filterCount} of ${filterCount} entries`;
+    } else {
+        let start = ((jobPageNumber - 1) * pageSize) + 1;
+        let end = Math.min(jobPageNumber * pageSize, filterCount);
+        text = `Showing ${start} to ${end} of ${filterCount} entries`;
     }
 
-    let start = ((BottomPageNumber - 1) * pageSize) + 1;
-    let end = Math.min(BottomPageNumber * pageSize, totalCount);
+    if (searchTerm && totalCount && totalCount !== filterCount) {
+        text += ` (filtered from ${totalCount} total entries)`;
+    }
 
-    $('.bottom-message').text(`Showing ${start} to ${end} of ${totalCount} entries`);
+    $('.bottom-message').text(text);
 }
 //#endregion
 
@@ -886,19 +894,26 @@ function changeJobPage(page) {
 //#endregion
 
 //#region Update Text
-function updateJobEntryInfo(totalCount) {
+function updateJobEntryInfo(filterCount, totalCount = null) {
 
     let pageSize = $('#Appro-PageSize').val();
+    let searchTerm = $('#Appro-SearchInput').val();
 
+    let text;
     if (pageSize == -1) {
-        $('.Appro-Pagination-message').text(`Showing 1 to ${totalCount} of ${totalCount} entries`);
-        return;
+        text = `Showing 1 to ${filterCount} of ${filterCount} entries`;
+        //return;
+    } else {
+        let start = ((jobPageNumber - 1) * pageSize) + 1;
+        let end = Math.min(jobPageNumber * pageSize, filterCount);
+        text = `Showing ${start} to ${end} of ${filterCount} entries`;
     }
 
-    let start = ((jobPageNumber - 1) * pageSize) + 1;
-    let end = Math.min(jobPageNumber * pageSize, totalCount);
+    if (filterCount && totalCount && totalCount !== filterCount) {
+        text += ` (filtered from ${totalCount} total entries)`;
+    }
 
-    $('.Appro-Pagination-message').text(`Showing ${start} to ${end} of ${totalCount} entries`);
+    $('.Appro-Pagination-message').text(text);
 }
 //#endregion
 
@@ -956,7 +971,7 @@ $(document).on('click', '.job-no', function () {
     $.ajax({
         url: "/OFRApproval/EditButtonClicked",
         type: "GET",
-        data: {jobno: jobno},
+        data: { jobno: jobno },
         success: function (res) {
 
             console.log("Edit click response:", res);

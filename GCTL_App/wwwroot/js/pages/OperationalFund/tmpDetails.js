@@ -25,7 +25,7 @@ function validateTmpDetails(model) {
         return false;
     }
 
-    return true; 
+    return true;
 }
 //#endregion
 
@@ -124,7 +124,7 @@ function ClearFullForm() {
     choicesSelectors.forEach(sel => {
         let choiceInstance = $(sel).data('choices');
         if (choiceInstance) {
-            choiceInstance.setChoiceByValue(''); 
+            choiceInstance.setChoiceByValue('');
         }
     });
 
@@ -210,7 +210,7 @@ function MasterAndDetailSaved() {
         success: function (res) {
             toastr.success(res.message || "Data Saved Successfully");
             ClearFullForm();
-            LoadRequisitionList(); 
+            LoadRequisitionList();
             loadJobEntryList();
             loadTmpDetails();
         },
